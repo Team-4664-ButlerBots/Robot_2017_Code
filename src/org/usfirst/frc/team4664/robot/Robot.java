@@ -1,9 +1,12 @@
 package org.usfirst.frc.team4664.robot;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Victor; 
+import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 public class Robot extends SampleRobot {
 	//Systems
     RobotDrive driveTrain;
@@ -12,6 +15,7 @@ public class Robot extends SampleRobot {
     Victor rightSide, leftSide;//Drive train motors
     Victor lattice, winch;//The Scissor lift & winch respectively
     Victor armSpeed, armTorque;//armSpeed spins the intake wheels; armTorque moves input in out
+    Gyro gyrosRFood;
     //Ports
     final int lsMotor	  = 0;
     final int rsMotor	  = 1;
@@ -49,6 +53,7 @@ public class Robot extends SampleRobot {
         driveTrain = new RobotDrive(leftSide, rightSide);
         joy1 = new Joystick(joy1Port);
         joy2 = new Joystick(joy2Port);
+        gyrosRFood = new AnalogGyro(0);
     	}
     
     public void operatorControl() {
@@ -72,12 +77,13 @@ public class Robot extends SampleRobot {
         		lattice.set(0.0);
         	}
         	if(joy2.getRawButton(winchOutB)){					//winch
-        		winch.set(winchOut);
+        		winch.set(winchOut);                                                                                                                               
         	}else if(joy2.getRawButton(winchInB)){
         		winch.set(winchIn);
         	}else{
         		winch.set(0.0);
         	}
+        	SmartDashboard.putNumber("Gyro Output: ", gyrosRFood.getAngle());
         	Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles   
         }
     }
