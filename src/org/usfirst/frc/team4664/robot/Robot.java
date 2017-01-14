@@ -3,9 +3,11 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 public class Robot extends SampleRobot {
 	//Systems
@@ -15,7 +17,7 @@ public class Robot extends SampleRobot {
     Victor rightSide, leftSide;//Drive train motors
     Victor lattice, winch;//The Scissor lift & winch respectively
     Victor armSpeed, armTorque;//armSpeed spins the intake wheels; armTorque moves input in out
-    Gyro gyrosRFood;
+    Rangefinder getMeOutOfHere;
     //Ports
     final int lsMotor	  = 0;
     final int rsMotor	  = 1;
@@ -42,7 +44,8 @@ public class Robot extends SampleRobot {
     //Laptop ports
     final int joy1Port	= 0;
     final int joy2Port  = 1;
-    
+    //Analog ports
+    final int rangeFinderPort = 1;
     public Robot() {
     	rightSide = new Victor(rsMotor);
     	leftSide  = new Victor(lsMotor);
@@ -53,11 +56,11 @@ public class Robot extends SampleRobot {
         driveTrain = new RobotDrive(leftSide, rightSide);
         joy1 = new Joystick(joy1Port);
         joy2 = new Joystick(joy2Port);
-        gyrosRFood = new AnalogGyro(0);
     	}
     
     public void operatorControl() {
         driveTrain.setSafetyEnabled(true);
+        getMeOutOfHere.setDefaults(rangeFinderPort);
         while (isOperatorControl() && isEnabled()) {
         	//Drivetrain
         	driveTrain.arcadeDrive(Deadband(joy1.getX(), driveXDb), Deadband(joy1.getY(), driveYDb)); //joy1 is drive
@@ -83,7 +86,7 @@ public class Robot extends SampleRobot {
         	}else{
         		winch.set(0.0);
         	}
-        	SmartDashboard.putNumber("Gyro Output: ", gyrosRFood.getAngle());
+    		SmartDashboard.putDouble("Distance: ", getMeOutOfHere.getDistance());
         	Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles   
         }
     }
