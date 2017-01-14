@@ -5,13 +5,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Rangefinder {
 	AnalogInput ultraSInput;
-	public final double sensitivityFactor = 0; 						//Multiplied by the voltage in order to find distance. Typically measured in units of inches/(milli)Volt.
-	public AnalogInput setDefaults(int port){
+	double sensitivityFactor;
+	public Rangefinder(int port, int senseFactor){
+		double sensitivityFactor = senseFactor; 						//Multiplied by the voltage in order to find distance. Typically measured in units of inches/(milli)Volt.
 		ultraSInput = new AnalogInput(port);
 		ultraSInput.setOversampleBits(8);
 		ultraSInput.setAverageBits(4);
-		return ultraSInput;
 	}
+	
 	public double getDistance(){
 		double voltage = ultraSInput.getVoltage();
 		double distance = voltage * sensitivityFactor;

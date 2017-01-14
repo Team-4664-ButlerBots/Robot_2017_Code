@@ -60,7 +60,7 @@ public class Robot extends SampleRobot {
     
     public void operatorControl() {
         driveTrain.setSafetyEnabled(true);
-        getMeOutOfHere.setDefaults(rangeFinderPort);
+        getMeOutOfHere = new Rangefinder(0,1);
         while (isOperatorControl() && isEnabled()) {
         	//Drivetrain
         	driveTrain.arcadeDrive(Deadband(joy1.getX(), driveXDb), Deadband(joy1.getY(), driveYDb)); //joy1 is drive
@@ -87,6 +87,12 @@ public class Robot extends SampleRobot {
         		winch.set(0.0);
         	}
     		SmartDashboard.putDouble("Distance: ", getMeOutOfHere.getDistance());
+			double sensitivityFactorMeasurements = 0;
+			double distance = 12;
+    		for(int i = 0; i < 1000; i++){
+    			sensitivityFactorMeasurements += getMeOutOfHere.getDistance();
+    			SmartDashboard.putDouble("Current Sensitivity Factor at " + distance + " inches",  sensitivityFactorMeasurements / (double)(i));
+    		}
         	Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles   
         }
     }
