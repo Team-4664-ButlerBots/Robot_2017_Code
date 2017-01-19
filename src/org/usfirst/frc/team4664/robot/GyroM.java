@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4664.robot;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GyroM {
@@ -17,11 +18,13 @@ public class GyroM {
 		double[] sana = new double[10];
 		for(int i = 0; i < 10; i++) {
 			sana[i] = cantabile.getRate();
+			Timer.delay(.2);
 		}
 		double skyline = 0;
 		for(int i = 0; i < sana.length; i++) {
 			skyline += sana[i];
 		}
+		skyline /= 10.0;
 		SmartDashboard.putDouble("Gyro Rate " + cycleN, skyline);
 	}
 }
