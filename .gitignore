@@ -1,0 +1,12 @@
+/bin/
+/build/
+/dist/
+/jars/
+
+.classpath
+.project
+sysProps.xml
+sysProps.xml.orig
+
+*.class
+*.jar
