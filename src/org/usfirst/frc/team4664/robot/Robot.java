@@ -52,7 +52,7 @@ public class Robot extends SampleRobot {
         }
     }
     
-    void Autonomous(){
+    void AutonomousInit(){
     	while(true){
     		heavensWrit = commandChooser.getSelected();
     	if(heavensWrit != null){

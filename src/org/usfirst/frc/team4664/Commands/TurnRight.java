@@ -1,15 +1,12 @@
 package org.usfirst.frc.team4664.Commands;
 
-import org.usfirst.frc.team4664.robot.GyroM;
 import org.usfirst.frc.team4664.robot.Robot;
 
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TurnRight extends Command{
     public TurnRight(){
     	requires(Robot.driveTrain);
-    	requires(Robot.sana);
     }
     protected void initialize(){
     }

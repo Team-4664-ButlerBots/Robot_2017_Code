@@ -1,6 +1,5 @@
 package org.usfirst.frc.team4664.Commands;
 
-import org.usfirst.frc.team4664.robot.GyroM;
 import org.usfirst.frc.team4664.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -8,7 +7,6 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnLeft extends Command{
     public TurnLeft(){
     	requires(Robot.driveTrain);
-    	requires(Robot.sana);
     }
     protected void initialize(){
     }
