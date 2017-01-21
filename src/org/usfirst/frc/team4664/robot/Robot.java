@@ -23,8 +23,19 @@ public class Robot extends SampleRobot {
     }
     
     void Autonomous(){
+    	while (isEnabled()) {
+        	SmartDashboard.putNumber("Gyro Output: ", sana.cantabile.getAngle());
+        	sana.updateGyro();
+        	for(int i = 0; i < 10; i++){
+        		sana.printRestingUpdateCycle(i);
+        		Timer.delay(.2);
+         }
+        	if(sana.cantabile.getAngle()>2){
+        		
+        		
+        	}
+       }
     }
-    
     void Test(){
 	}
 
