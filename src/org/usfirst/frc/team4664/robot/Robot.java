@@ -52,19 +52,11 @@ public class Robot extends SampleRobot {
         }
     }
     
-    void Autonomous(){
-    	while(true){
-    		heavensWrit = commandChooser.getSelected();
+    void AutonomousInit(){
+    	heavensWrit = commandChooser.getSelected();
     	if(heavensWrit != null){
     		heavensWrit.start();
     	}
-    	}
-    }
-    public void autonomousPeriodic(){
-    	Scheduler.getInstance().run();
-    }
-    public void teleopPeriodic(){
-    	Scheduler.getInstance().run();
     }
     void Test(){
 	}
