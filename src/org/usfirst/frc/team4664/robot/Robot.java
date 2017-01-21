@@ -78,17 +78,22 @@ public class Robot extends SampleRobot {
         	for(int i = 0; i < 10; i++){
         		sana.printRestingUpdateCycle(i);
          }
-        	if(sana.cantabile.getAngle()>2){
-        		leftSide.setSpeed(sana.cantabile.getAngle()+0.1);
-        	}else{
-        		if(sana.cantabile.getAngle()>-2){
-            		rightSide.setSpeed((sana.cantabile.getAngle()+0.1)*-1);
-        		}
-        	}
-        	Timer.delay(0.1);
+        	GyroLineAuto();
+        	
+        	
        }
     }
     void Test(){
 	}
+    void GyroLineAuto(){
+    	if(sana.cantabile.getAngle()>2){
+    		driveTrain.arcadeDrive(1, (sana.cantabile.getAngle())*-1);
+    	}else{
+    		if(sana.cantabile.getAngle()>-2){
+    			driveTrain.arcadeDrive(1, sana.cantabile.getAngle());
+    		}
+    	}
+    	Timer.delay(0.01);
+    }
 
 }
