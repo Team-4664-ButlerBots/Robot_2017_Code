@@ -6,9 +6,9 @@ import org.usfirst.frc.team4664.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TurnLeft extends Command{
-    GyroM gyro = new GyroM(0);
     public TurnLeft(){
     	requires(Robot.driveTrain);
+    	requires(Robot.sana);
     }
     protected void initialize(){
     }
@@ -16,8 +16,8 @@ public class TurnLeft extends Command{
     	Robot.driveTrain.drive(-.2,.2);
     }
     protected boolean isFinished(){
-    	double placeholder = gyro.getAngle();
-    	return Math.abs(placeholder - gyro.getAngle()) < 90;
+    	double placeholder = Robot.sana.cantabile.getAngle();
+    	return Math.abs(placeholder - Robot.sana.cantabile.getAngle()) < 90;
     }
     protected void end(){
     	Robot.driveTrain.drive(0,0);

@@ -7,10 +7,9 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TurnRight extends Command{
-    RobotDrive polarExpress;
-    GyroM gyro = new GyroM(0);
     public TurnRight(){
     	requires(Robot.driveTrain);
+    	requires(Robot.sana);
     }
     protected void initialize(){
     }
@@ -18,8 +17,8 @@ public class TurnRight extends Command{
     	Robot.driveTrain.drive(.2,-.2);
     }
     protected boolean isFinished(){
-    	double placeholder = gyro.getAngle();
-    	return Math.abs(placeholder - gyro.getAngle()) < 90;
+    	double placeholder = Robot.sana.cantabile.getAngle();
+    	return Math.abs(placeholder - Robot.sana.cantabile.getAngle()) < 90;
     }
     protected void end(){
     	Robot.driveTrain.drive(0,0);

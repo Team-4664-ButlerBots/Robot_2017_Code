@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 public class Robot extends SampleRobot {
-	public GyroM sana;
+	public static GyroM sana;
 	public static DriveTrain driveTrain;
     final int rangeFinderPort = 1;
     SendableChooser<Command> commandChooser;
@@ -33,8 +33,8 @@ public class Robot extends SampleRobot {
     }
     public void operatorControl() {
         while (isEnabled()) {
-        	SmartDashboard.putNumber("Gyro Output: ", sana.cantabile.getAngle());
-        	sana.updateGyro();
+        	//SmartDashboard.putNumber("Gyro Output: ", sana.cantabile.getAngle());
+        	//sana.updateGyro();
         	/*Rangefinder getMeOutOfHere = new Rangefinder(0,1);
     		SmartDashboard.putDouble("Distance: ", getMeOutOfHere.getDistance());
 			double sensitivityFactorMeasurements = 0;
@@ -53,9 +53,11 @@ public class Robot extends SampleRobot {
     }
     
     void Autonomous(){
-    	heavensWrit = commandChooser.getSelected();
+    	while(true){
+    		heavensWrit = commandChooser.getSelected();
     	if(heavensWrit != null){
     		heavensWrit.start();
+    	}
     	}
     }
     public void autonomousPeriodic(){

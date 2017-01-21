@@ -2,9 +2,10 @@ package org.usfirst.frc.team4664.robot;
 
 
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class GyroM {
+public class GyroM extends Subsystem{
 	public AnalogGyro cantabile;
 	public int cycleCount = 0;
 	public GyroM(int port){
@@ -17,5 +18,8 @@ public class GyroM {
 	public double getAngle(){
 		double placeholder = (int)(cantabile.getAngle() * 100 + .5)/100.0;
 		return placeholder;
+	}
+	@Override
+	protected void initDefaultCommand() {
 	}	
 }
