@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnRight extends Command{
     RobotDrive polarExpress;
     GyroM gyro = new GyroM(0);
-    protected void initialize(){
+    public TurnRight(){
     	requires(Robot.driveTrain);
+    }
+    protected void initialize(){
     }
     protected void execute(){
     	Robot.driveTrain.drive(.2,-.2);

@@ -1,9 +1,7 @@
 package org.usfirst.frc.team4664.robot;
 
-import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GyroM {
