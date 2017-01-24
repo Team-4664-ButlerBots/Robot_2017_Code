@@ -62,22 +62,19 @@ public class Robot extends SampleRobot {
         while (isEnabled()) {
         	SmartDashboard.putNumber("Gyro Output: ", sana.cantabile.getAngle());
         	sana.updateGyro();
-        	for(int i = 0; i < 10; i++){
-        		sana.printRestingUpdateCycle(i);
+
         		Timer.delay(.2);
         	}
         	Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles   
         }
-    }
+    
     
     void Autonomous(){
-    	driveTrain.setSafetyEnabled(true);
+    	driveTrain.setSafetyEnabled(false);
+    	RobotDrive.setSafetyEnabled(false);
     	while (isEnabled()) {
         	SmartDashboard.putNumber("Gyro Output: ", sana.cantabile.getAngle());
         	sana.updateGyro();
-        	for(int i = 0; i < 10; i++){
-        		sana.printRestingUpdateCycle(i);
-         }
         	GyroLineAuto();
         	
         	
@@ -87,9 +84,11 @@ public class Robot extends SampleRobot {
 	}
     void GyroLineAuto(){
     	if(sana.cantabile.getAngle()>2){
+    		System.out.println("angle greater than 2");
     		driveTrain.arcadeDrive(1, (sana.cantabile.getAngle())*-1);
     	}else{
     		if(sana.cantabile.getAngle()>-2){
+    			System.out.println("angle less than 2");
     			driveTrain.arcadeDrive(1, sana.cantabile.getAngle());
     		}
     	}
