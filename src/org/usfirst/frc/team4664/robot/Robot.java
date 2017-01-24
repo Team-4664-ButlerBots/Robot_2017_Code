@@ -54,9 +54,12 @@ public class Robot extends SampleRobot {
     
     void AutonomousInit(){
     	heavensWrit = commandChooser.getSelected();
+    	while(true){
+    		heavensWrit = commandChooser.getSelected();
     	if(heavensWrit != null){
     		heavensWrit.start();
     	}
+    }
     }
     void Test(){
 	}
