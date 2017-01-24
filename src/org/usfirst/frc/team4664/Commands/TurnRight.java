@@ -11,13 +11,14 @@ public class TurnRight extends Command{
     protected void initialize(){
     }
     protected void execute(){
-    	Robot.driveTrain.drive(.2,-.2);
+    	Robot.driveTrain.arcadeDrive(.5,-.5);
     }
     protected boolean isFinished(){
     	double placeholder = Robot.sana.cantabile.getAngle();
     	return Math.abs(placeholder - Robot.sana.cantabile.getAngle()) < 90;
     }
     protected void end(){
-    	Robot.driveTrain.drive(0,0);
+    }
+    protected void interrupted() {
     }
 }

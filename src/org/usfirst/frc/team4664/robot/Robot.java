@@ -6,23 +6,32 @@ import org.usfirst.frc.team4664.Commands.TurnLeft;
 import org.usfirst.frc.team4664.Commands.TurnRight;
 import org.usfirst.frc.team4664.Subsystem.DriveTrain;
 
-import edu.wpi.first.wpilibj.SampleRobot;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
-public class Robot extends SampleRobot {
+public class Robot extends IterativeRobot {
 	public static GyroM sana;
 	public static DriveTrain driveTrain;
     final int rangeFinderPort = 1;
     SendableChooser<Command> commandChooser;
     Command heavensWrit;
+    IO PSVista;
     public Robot() {
     	sana = new GyroM(0);
     	driveTrain = new DriveTrain();
     	commandChooser = new SendableChooser<>();
     }
+	@Override
+	public void disabledInit() {
+
+	}
+	@Override
+	public void disabledPeriodic() {
+		Scheduler.getInstance().run();
+	}
     public void robotInit(){
     	commandChooser.addDefault("Default Drive", new JoyDrive());
     	commandChooser.addObject("Go Forward", new GoForward());
@@ -31,41 +40,67 @@ public class Robot extends SampleRobot {
     	commandChooser.addObject("Turn Right", new TurnRight());
     	SmartDashboard.putData("Commands", commandChooser);
     }
-    public void operatorControl() {
-        while (isEnabled()) {
-        	//SmartDashboard.putNumber("Gyro Output: ", sana.cantabile.getAngle());
-        	//sana.updateGyro();
-        	/*Rangefinder getMeOutOfHere = new Rangefinder(0,1);
-    		SmartDashboard.putDouble("Distance: ", getMeOutOfHere.getDistance());
-			double sensitivityFactorMeasurements = 0;
-			double distance = 12;
-    		for(int i = 0; i < 1000; i++){
-    			sensitivityFactorMeasurements += getMeOutOfHere.getDistance();
-    			SmartDashboard.putDouble("Current Sensitivity Factor at " + distance + " inches",  sensitivityFactorMeasurements / (double)(i));
-    		}*/
-        	if(heavensWrit != commandChooser.getSelected()){
-        		heavensWrit.cancel();
-        		heavensWrit = commandChooser.getSelected();
-        		heavensWrit.start();
-        	}
-        	Timer.delay(0.005);	// wait 5ms to avoid hogging CPU cycles  
-        }
-    }
-    
-    void AutonomousInit(){
+    @Override
+	public void autonomousInit(){
     	while(true){
     		heavensWrit = commandChooser.getSelected();
-    	if(heavensWrit != null){
-    		heavensWrit.start();
-    	}
+    		if(heavensWrit != null){
+    			heavensWrit.start();
+    		}
     	}
     }
+    @Override
     public void autonomousPeriodic(){
     	Scheduler.getInstance().run();
+    }
+    @Override
+    public void teleopInit(){
+    	if(heavensWrit != commandChooser.getSelected()){
+    		heavensWrit.cancel();
+    		heavensWrit = commandChooser.getSelected();
+    		heavensWrit.start();
+    	}
+    	else{
+    		for(int i = 0; i < PSVista.getActiveButtons().length; i++){
+        		switch(PSVista.getActiveButtons()[i]){
+        			case 0:
+        	    		heavensWrit.cancel();
+        	    		heavensWrit = new GoForward();
+        	    		heavensWrit.start();
+        				break;
+        			case 1:
+        	    		heavensWrit.cancel();
+        	    		heavensWrit = new GoBackward();
+        	    		heavensWrit.start();
+        				break;
+        			case 2:
+        	    		heavensWrit.cancel();
+        	    		heavensWrit = new TurnLeft();
+        	    		heavensWrit.start();
+        				break;
+        			case 3:
+        	    		heavensWrit.cancel();
+        	    		heavensWrit = new TurnRight();
+        	    		heavensWrit.start();
+        				break;
+        			case 4:
+        	    		heavensWrit.cancel();
+        	    		heavensWrit = new JoyDrive();
+        	    		heavensWrit.start();
+        				break;
+        			default:
+        	    		heavensWrit.cancel();
+        	    		heavensWrit = new JoyDrive();
+        	    		heavensWrit.start();
+        				break;
+        		}
+    		}
+    	}
     }
     public void teleopPeriodic(){
     	Scheduler.getInstance().run();
     }
-    void Test(){
+	public void testPeriodic() {
+		LiveWindow.run();
 	}
 }
