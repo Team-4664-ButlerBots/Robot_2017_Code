@@ -39,7 +39,7 @@ public class Robot extends SampleRobot {
     //Laptop ports
     final int joy1Port	= 0;
     final int joy2Port  = 1;
-    public GyroM sana;
+    public GyroM gyro;
     
     public Robot() {
     	
@@ -52,7 +52,7 @@ public class Robot extends SampleRobot {
         driveTrain = new RobotDrive(leftSide, rightSide);
         joy1 = new Joystick(joy1Port);
         joy2 = new Joystick(joy2Port);
-        sana = new GyroM(0);
+        gyro = new GyroM(0);
         
     	}
 	
@@ -60,8 +60,8 @@ public class Robot extends SampleRobot {
     
     public void operatorControl() {
         while (isEnabled()) {
-        	SmartDashboard.putNumber("Gyro Output: ", sana.cantabile.getAngle());
-        	sana.updateGyro();
+        	SmartDashboard.putNumber("Gyro Output: ", gyro.cantabile.getAngle());
+        	gyro.updateGyro();
 
         		Timer.delay(.2);
         	}
@@ -71,10 +71,10 @@ public class Robot extends SampleRobot {
     
     void Autonomous(){
     	driveTrain.setSafetyEnabled(false);
-    	RobotDrive.setSafetyEnabled(false);
+    	//RobotDrive.setSafetyEnabled(false);
     	while (isEnabled()) {
-        	SmartDashboard.putNumber("Gyro Output: ", sana.cantabile.getAngle());
-        	sana.updateGyro();
+        	SmartDashboard.putNumber("Gyro Output: ", gyro.cantabile.getAngle());
+        	gyro.updateGyro();
         	GyroLineAuto();
         	
         	
@@ -83,13 +83,13 @@ public class Robot extends SampleRobot {
     void Test(){
 	}
     void GyroLineAuto(){
-    	if(sana.cantabile.getAngle()>2){
+    	if(gyro.cantabile.getAngle()>2){
     		System.out.println("angle greater than 2");
-    		driveTrain.arcadeDrive(1, (sana.cantabile.getAngle())*-1);
+    		driveTrain.arcadeDrive(1, (gyro.cantabile.getAngle())*-1);
     	}else{
-    		if(sana.cantabile.getAngle()>-2){
+    		if(gyro.cantabile.getAngle()>-2){
     			System.out.println("angle less than 2");
-    			driveTrain.arcadeDrive(1, sana.cantabile.getAngle());
+    			driveTrain.arcadeDrive(1, gyro.cantabile.getAngle());
     		}
     	}
     	Timer.delay(0.01);
