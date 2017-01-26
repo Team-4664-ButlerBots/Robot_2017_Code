@@ -11,12 +11,13 @@ public class GoForward extends Command{
     protected void initialize(){
     }
     protected void execute(){
-    	Robot.driveTrain.drive(.2,.2);
+    	Robot.driveTrain.arcadeDrive(.5,.5);
     }
     protected boolean isFinished(){
     	return false;
     }
     protected void end(){
-    	Robot.driveTrain.drive(0,0);
+    }    
+    protected void interrupted() {
     }
 }

@@ -17,11 +17,13 @@ public class JoyDrive extends Command{
     protected void initialize(){
     }
     protected void execute(){
-    	Robot.driveTrain.drive(joy1.getX(), joy1.getY());
+    	Robot.driveTrain.arcadeDrive(joy1.getX(), joy1.getY());
     }
     protected boolean isFinished(){
     	return false;
     }
     protected void end(){
+    }
+    protected void interrupted() {
     }
 }
