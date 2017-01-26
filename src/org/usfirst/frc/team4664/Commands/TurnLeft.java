@@ -15,7 +15,10 @@ public class TurnLeft extends Command{
     }
     protected boolean isFinished(){
     	double placeholder = Robot.sana.cantabile.getAngle();
-    	return Math.abs(placeholder - Robot.sana.cantabile.getAngle()) < 90;
+    	if(Math.abs(placeholder - Robot.sana.cantabile.getAngle()) < 90 || Robot.init.heavensWrit != Robot.init.commandChooser.getSelected()){
+    		return true;
+    	}
+    	else{return false;}
     }
     protected void end(){
     }

@@ -14,7 +14,12 @@ public class GoBackward extends Command{
     	Robot.driveTrain.arcadeDrive(-.5,-.5);
     }
     protected boolean isFinished(){
-    	return false;
+    	if(Robot.init.heavensWrit != Robot.init.commandChooser.getSelected()){
+    		return true;
+    	}
+    	else{
+    		return false;
+    	}
     }
     protected void end(){
     }
