@@ -7,19 +7,24 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class UpdateSensitivityFactor extends Command{
-	private Rangefinder kapi;
-	private double torisetsu;
+	private Rangefinder hiina;
+	private double aishite;
 	public UpdateSensitivityFactor(double distance){
-		kapi = new Rangefinder(0,1);
-		torisetsu = distance;
+		hiina = new Rangefinder(0,1);
+		aishite = distance;
 	}
     protected void initialize(){
-    	SmartDashboard.putDouble("Sensitivity Factor", kapi.ultraSInput.getVoltage() / torisetsu);
+    	SmartDashboard.putDouble("Sensitivity Factor", hiina.ultraSInput.getVoltage() / aishite);
     }
     protected void execute(){
     }
     protected boolean isFinished(){
-    	return false;
+    	if(Robot.torisetsu.checkForChange(5)){
+    		return true;
+    	}
+    	else{
+    		return false;
+    	}
     }
     protected void end(){
     }

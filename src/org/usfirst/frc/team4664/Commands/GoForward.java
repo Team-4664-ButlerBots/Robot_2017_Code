@@ -14,7 +14,12 @@ public class GoForward extends Command{
     	Robot.driveTrain.arcadeDrive(.5,.5);
     }
     protected boolean isFinished(){
-    	return false;
+    	if(Robot.torisetsu.checkForChange(1)){
+    		return true;
+    	}
+    	else{
+    		return false;
+    	}
     }
     protected void end(){
     }    
