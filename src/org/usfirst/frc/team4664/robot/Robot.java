@@ -26,16 +26,16 @@ public class Robot extends IterativeRobot {
     public void robotInit(){
     }
     public void robotPeriodic(){
-		if(torisetsu.heavensWrit != torisetsu.commandChooser.getSelected()){
-			torisetsu.heavensWrit = torisetsu.commandChooser.getSelected();
-			torisetsu.heavensWrit.start();
+		if(torisetsu.tenshit != torisetsu.commandChooser.getSelected()){
+			torisetsu.tenshit = torisetsu.commandChooser.getSelected();
+			torisetsu.tenshit.start();
 		}
 	}
     @Override
 	public void autonomousInit(){
-    	torisetsu.heavensWrit = torisetsu.commandChooser.getSelected();
-    	if(torisetsu.heavensWrit != null){
-    		torisetsu.heavensWrit.start();
+    	torisetsu.tenshit = torisetsu.commandChooser.getSelected();
+    	if(torisetsu.tenshit != null){
+    		torisetsu.tenshit.start();
     	}
     }
     @Override

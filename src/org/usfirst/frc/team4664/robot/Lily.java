@@ -2,37 +2,37 @@ package org.usfirst.frc.team4664.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-public class IO {
-    final int joy1Port	= 0;
-    final int joy2Port  = 1;
-    public static Joystick joy1, joy2;
+public class Lily {
+    final int root1Port	= 0;
+    final int root2Port  = 1;
+    public static Joystick root1, root2;
     static int[] bloom;
-    static int[] lily;
-    public IO(){
-        joy1 = new Joystick(joy1Port);
-        joy2 = new Joystick(joy2Port);
+    static int[] stem;
+    public Lily(){
+        root1 = new Joystick(root1Port);
+        root2 = new Joystick(root2Port);
     	bloom = new int[14];
-    	lily = new int[14];
+    	stem = new int[14];
     }
     public static double getStickX(){
-    	return joy1.getX();
+    	return root1.getX();
     }
     public static double getStickY(){
-    	return joy1.getY();
+    	return root1.getY();
     }
     public static int[] getActiveButtons(){
     	int count = 1;
     	for(int i = 1; i < 14; i++){
-    		if(joy2.getRawButton(i)){
+    		if(root1.getRawButton(i)){
     			bloom[i] = 1;
     		}
     	}
     	for(int i = 1; i < 14; i++){
     		if(bloom[i] == 1){
-    			lily[count] = i;
+    			stem[count] = i;
     			count++;
     		}
     	}
-		return lily;
+		return stem;
     }
 }

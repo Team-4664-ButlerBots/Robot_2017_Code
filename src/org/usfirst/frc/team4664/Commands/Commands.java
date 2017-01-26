@@ -1,6 +1,6 @@
 package org.usfirst.frc.team4664.Commands;
 
-import org.usfirst.frc.team4664.robot.IO;
+import org.usfirst.frc.team4664.robot.Lily;
 import org.usfirst.frc.team4664.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Commands {
     public SendableChooser<Command> commandChooser;
-    public Command heavensWrit;
-    public IO PSVista;
+    public Command tenshit;
+    public Lily PSVista;
+    public Camera sayonara;
     public Commands(){
     	commandChooser = new SendableChooser<>();
-    	PSVista = new IO();
+    	PSVista = new Lily();
     	display();
+    	sayonara = new Camera();
     }
     public void display(){
     	commandChooser.addDefault("Default Drive", new JoyDrive());
@@ -22,13 +24,15 @@ public class Commands {
     	commandChooser.addObject("Go Backward", new GoBackward());
     	commandChooser.addObject("Turn Left", new TurnLeft());
     	commandChooser.addObject("Turn Right", new TurnRight());
+    	commandChooser.addObject("Update Sensitivity", new UpdateSensitivityFactor(SmartDashboard.getDouble("Distance")));
     	SmartDashboard.putData("Commands", commandChooser);
+    	SmartDashboard.putDouble("Distance", 0.00);
     }
     public boolean checkForChange(int vocaloidRank){
-    	if(Robot.torisetsu.heavensWrit != Robot.torisetsu.commandChooser.getSelected()){
+    	if(Robot.torisetsu.tenshit != Robot.torisetsu.commandChooser.getSelected()){
     		return true;
     	}
-    	else if(IO.getActiveButtons()[1] != 0 && IO.getActiveButtons()[1] != vocaloidRank){
+    	else if(Lily.getActiveButtons()[1] != 0 && Lily.getActiveButtons()[1] != vocaloidRank){
     		return true;
     	}
     	else{
