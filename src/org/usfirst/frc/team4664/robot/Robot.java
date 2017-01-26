@@ -4,6 +4,7 @@ import org.usfirst.frc.team4664.Commands.GoForward;
 import org.usfirst.frc.team4664.Commands.JoyDrive;
 import org.usfirst.frc.team4664.Commands.TurnLeft;
 import org.usfirst.frc.team4664.Commands.TurnRight;
+import org.usfirst.frc.team4664.Commands.UpdateSensitivityFactor;
 import org.usfirst.frc.team4664.Subsystem.DriveTrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -38,6 +39,7 @@ public class Robot extends IterativeRobot {
     	commandChooser.addObject("Go Backward", new GoBackward());
     	commandChooser.addObject("Turn Left", new TurnLeft());
     	commandChooser.addObject("Turn Right", new TurnRight());
+    	commandChooser.addObject("Update Sensitivity Factor", new UpdateSensitivityFactor());
     	SmartDashboard.putData("Commands", commandChooser);
     }
     @Override
@@ -88,6 +90,10 @@ public class Robot extends IterativeRobot {
         	    		heavensWrit = new JoyDrive();
         	    		heavensWrit.start();
         				break;
+        			case 5:
+        				heavensWrit.cancel();
+        				heavensWrit = new UpdateSensitivityFactor();
+        				heavensWrit.start();
         			default:
         	    		heavensWrit.cancel();
         	    		heavensWrit = new JoyDrive();

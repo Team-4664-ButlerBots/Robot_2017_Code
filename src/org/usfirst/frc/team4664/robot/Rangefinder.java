@@ -3,7 +3,7 @@ package org.usfirst.frc.team4664.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 
 public class Rangefinder {
-	AnalogInput ultraSInput;
+	public AnalogInput ultraSInput;
 	double sensitivityFactor;
 	public Rangefinder(int port, int senseFactor){
 		sensitivityFactor = senseFactor; 						//Multiplied by the voltage in order to find distance. Typically measured in units of inches/(milli)Volt.
