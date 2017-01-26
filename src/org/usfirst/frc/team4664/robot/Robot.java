@@ -40,6 +40,9 @@ public class Robot extends SampleRobot {
     final int joy1Port	= 0;
     final int joy2Port  = 1;
     public GyroM gyro;
+    //motor speeds
+    double leftSpeed=1;
+  	double rightSpeed=1;
     
     public Robot() {
     	
@@ -69,7 +72,8 @@ public class Robot extends SampleRobot {
         }
     
     
-    void Autonomous(){
+    public void autonomous(){
+  	
     	driveTrain.setSafetyEnabled(false);
     	//RobotDrive.setSafetyEnabled(false);
     	while (isEnabled()) {
@@ -82,16 +86,22 @@ public class Robot extends SampleRobot {
     }
     void Test(){
 	}
+    
+    //gyro works clockwise.
     void GyroLineAuto(){
-    	if(gyro.cantabile.getAngle()>2){
-    		System.out.println("angle greater than 2");
-    		driveTrain.arcadeDrive(1, (gyro.cantabile.getAngle())*-1);
+    	
+    	if(gyro.cantabile.getAngle()>2){//turn left. right motot more power
+    		System.out.println("Greater than 2  :"+gyro.cantabile.getAngle());
+    		//driveTrain.arcadeDrive(1, (gyro.cantabile.getAngle())*-1);
+    		leftSpeed=gyro.cantabile.getAngle()/360;
     	}else{
-    		if(gyro.cantabile.getAngle()>-2){
-    			System.out.println("angle less than 2");
-    			driveTrain.arcadeDrive(1, gyro.cantabile.getAngle());
+    		if(gyro.cantabile.getAngle()<-2){
+    			System.out.println("angle less than 2   :"+gyro.cantabile.getAngle());
+    			//driveTrain.arcadeDrive(1, gyro.cantabile.getAngle());
+    		rightSpeed=gyro.cantabile.getAngle()/100;
     		}
     	}
+    	driveTrain.setLeftRightMotorOutputs(leftSpeed, rightSpeed);
     	Timer.delay(0.01);
     }
 
