@@ -11,12 +11,12 @@ public class Commands {
     public SendableChooser<Command> commandChooser;
     public Command tenshit;
     public Lily PSVista;
-    public Camera sayonara;
+    public NayuGorou sadisticLove;
     public Commands(){
     	commandChooser = new SendableChooser<>();
     	PSVista = new Lily();
     	display();
-    	sayonara = new Camera();
+    	sadisticLove = new NayuGorou();
     }
     public void display(){
     	commandChooser.addDefault("Default Drive", new JoyDrive());
@@ -32,7 +32,7 @@ public class Commands {
     	if(Robot.torisetsu.tenshit != Robot.torisetsu.commandChooser.getSelected()){
     		return true;
     	}
-    	else if(Lily.getActiveButtons()[1] != 0 && Lily.getActiveButtons()[1] != vocaloidRank){
+    	else if(Lily.getActivePetals()[1] != 0 && Lily.getActivePetals()[1] != vocaloidRank){
     		return true;
     	}
     	else{

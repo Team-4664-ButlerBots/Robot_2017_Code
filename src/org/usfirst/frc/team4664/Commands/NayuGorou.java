@@ -8,8 +8,8 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 
-public class Camera {
-	public Camera(){
+public class NayuGorou {
+	public NayuGorou(){
         new Thread(() -> {
             UsbCamera kanouSekaiRon = CameraServer.getInstance().startAutomaticCapture();
             kanouSekaiRon.setResolution(480, 360);

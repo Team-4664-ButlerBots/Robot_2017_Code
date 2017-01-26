@@ -14,13 +14,13 @@ public class Lily {
     	bloom = new int[14];
     	stem = new int[14];
     }
-    public static double getStickX(){
+    public static double getLeafX(){
     	return root1.getX();
     }
-    public static double getStickY(){
+    public static double getLeafY(){
     	return root1.getY();
     }
-    public static int[] getActiveButtons(){
+    public static int[] getActivePetals(){
     	int count = 1;
     	for(int i = 1; i < 14; i++){
     		if(root1.getRawButton(i)){

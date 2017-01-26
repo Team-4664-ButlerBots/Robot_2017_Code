@@ -12,7 +12,7 @@ public class JoyDrive extends Command{
     protected void initialize(){
     }
     protected void execute(){
-    	Robot.driveTrain.arcadeDrive(Lily.getStickX(), Lily.getStickY());
+    	Robot.driveTrain.arcadeDrive(Lily.getLeafX(), Lily.getLeafY());
     }
     protected boolean isFinished(){
     	return false;

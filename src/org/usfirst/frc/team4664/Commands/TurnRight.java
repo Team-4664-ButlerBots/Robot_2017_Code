@@ -14,8 +14,8 @@ public class TurnRight extends Command{
     	Robot.driveTrain.arcadeDrive(.5,-.5);
     }
     protected boolean isFinished(){
-    	double placeholder = Robot.sana.cantabile.getAngle();
-    	if(Math.abs(placeholder - Robot.sana.cantabile.getAngle()) < 90 || Robot.torisetsu.checkForChange(4)){
+    	double placeholder = Robot.flowery.cantabile.getAngle();
+    	if(Math.abs(placeholder - Robot.flowery.cantabile.getAngle()) < 90 || Robot.torisetsu.checkForChange(4)){
     		return true;
     	} 
     	else{

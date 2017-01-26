@@ -4,10 +4,10 @@ package org.usfirst.frc.team4664.robot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class GyroM{
+public class Sana{
 	public AnalogGyro cantabile;
 	public int cycleCount = 0;
-	public GyroM(int port){
+	public Sana(int port){
 		cantabile = new AnalogGyro(port);
 		cantabile.calibrate();
 	}
