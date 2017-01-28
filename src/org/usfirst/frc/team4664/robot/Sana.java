@@ -4,7 +4,7 @@ package org.usfirst.frc.team4664.robot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Sana{
+public class Sana{		//sana and her songs relate to the Gyro
 	public AnalogGyro cantabile;
 	public int cycleCount = 0;
 	public Sana(int port){
