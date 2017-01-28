@@ -19,6 +19,7 @@ public class Commands {
     	sadisticLove = new NayuGorou();
     }
     public void display(){
+    	SmartDashboard.putDouble("Distance", 0.00);
     	commandChooser.addDefault("Default Drive", new JoyDrive());
     	commandChooser.addObject("Go Forward", new GoForward());
     	commandChooser.addObject("Go Backward", new GoBackward());
@@ -26,7 +27,6 @@ public class Commands {
     	commandChooser.addObject("Turn Right", new TurnRight());
     	commandChooser.addObject("Update Sensitivity", new UpdateSensitivityFactor(SmartDashboard.getDouble("Distance")));
     	SmartDashboard.putData("Commands", commandChooser);
-    	SmartDashboard.putDouble("Distance", 0.00);
     }
     public boolean checkForChange(int vocaloidRank){
     	if(Robot.torisetsu.tenshit != Robot.torisetsu.commandChooser.getSelected()){
