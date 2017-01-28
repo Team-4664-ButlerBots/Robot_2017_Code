@@ -1,4 +1,5 @@
-/bin/**
+/bin/
+/bin/org/usfirst/frc/team4664/robot.class
 /build/
 /dist/
 /jars/
