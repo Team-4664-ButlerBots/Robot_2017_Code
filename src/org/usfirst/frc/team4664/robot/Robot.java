@@ -73,14 +73,15 @@ public class Robot extends SampleRobot {
     
     
     public void autonomous(){
-  	
+  	gyro.cantabile.calibrate();
     	while (isEnabled()) {
         	SmartDashboard.putNumber("Gyro Output: ", gyro.cantabile.getAngle());
         	gyro.updateGyro();
-        	GyroStraightLine.GyroLine(gyro.cantabile.getAngle(),0.28,75.0);
+        	//GyroStraightLine.GyroLineDrive(gyro.cantabile.getAngle(),0.1,70.0);
+        	GyroStraightLine.GryoLineArcade(gyro.cantabile.getAngle(), 0.25, false);
+        	System.out.println(gyro.cantabile.getAngle());
         	
-        	
-       }
+    	}
     }
     void Test(){
 	}
