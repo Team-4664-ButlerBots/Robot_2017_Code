@@ -6,14 +6,18 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 public class Robot extends IterativeRobot {
-	public static Sana flowery;
+	public static Gyro skyLine;
 	public static DriveTrain driveTrain;
+    public static Commands commandList;
+    public static RangeFinder headset;
+    public static Camera possibleWorlds;
     final int rangeFinderPort = 1;
-    public static Commands torisetsu;
     public Robot() {
-    	flowery = new Sana(0);
+    	skyLine = new Gyro(0);
     	driveTrain = new DriveTrain();
-    	torisetsu = new Commands();
+    	commandList = new Commands();
+    	headset = new RangeFinder(1, 1);
+    	possibleWorlds = new Camera();
     }
 	@Override
 	public void disabledInit() {
@@ -26,16 +30,20 @@ public class Robot extends IterativeRobot {
     public void robotInit(){
     }
     public void robotPeriodic(){
-		if(torisetsu.tenshit != torisetsu.commandChooser.getSelected()){
-			torisetsu.tenshit = torisetsu.commandChooser.getSelected();
-			torisetsu.tenshit.start();
+		if(commandList.command != commandList.commandChooser.getSelected()){		//checks for change on SmartDashboard CommandList
+			commandList.command = commandList.commandChooser.getSelected();			//sets command to the selected command.
+			commandList.command.start();											//starts command
 		}
+		else if(IO.getActiveButtons() != 0){										//checks for a button being depressed
+			commandList.switchButtons();
+		}
+		possibleWorlds.run();
 	}
     @Override
 	public void autonomousInit(){
-    	torisetsu.tenshit = torisetsu.commandChooser.getSelected();
-    	if(torisetsu.tenshit != null){
-    		torisetsu.tenshit.start();
+    	commandList.command = commandList.commandChooser.getSelected();
+    	if(commandList.command != null){
+    		commandList.command.start();
     	}
     }
     @Override
