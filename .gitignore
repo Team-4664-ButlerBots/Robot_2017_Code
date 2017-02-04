@@ -1,4 +1,5 @@
 bin/
+<<<<<<< HEAD
 build/
 dist/
 sysProps.xml
@@ -8,3 +9,5 @@ sysProps.xml
 .classpath
 .project
 .settings/
+=======
+>>>>>>> 07611698ce8aba4991c166d7849d8284bbda5c92
