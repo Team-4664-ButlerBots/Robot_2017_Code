@@ -204,9 +204,6 @@ public class Pipeline {
 			final double ratio = bb.width / (double)bb.height;
 			if (ratio < minRatio || ratio > maxRatio) continue;
 			output.add(contour);			
-			Rect r = Imgproc.boundingRect(inputContours.get(1));
-			Rect r1 = Imgproc.boundingRect(inputContours.get(0)); 
-			centerX = new double[]{r1.x + (r1.width / 2), r.x + (r.width / 2)};
 			Imgcodecs.imwrite("output.png", blurInput);
 		}
 	}
