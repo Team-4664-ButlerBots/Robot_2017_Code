@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Robot extends SampleRobot {
+public class Robot extends SampleRobot implements Constants{
 	//Drive System Init
 	RobotDrive driveSystem = new RobotDrive(0, 1);
 	
 	//Joystick Declaration
-	Joystick gamepad = new Joystick(0);
-	Joystick stick   = new Joystick(1);
+	Joystick gamepad = new Joystick(gamepadPort);
+	Joystick stick   = new Joystick(joystickPort);
 	
 	//RobotStuff
 	public Robot() {
