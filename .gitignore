@@ -1,1 +1,13 @@
 bin/
+<<<<<<< HEAD
+=======
+build/
+dist/
+sysProps.xml
+*.class
+.DS_STORE
+*~
+.classpath
+.project
+.settings/
+>>>>>>> d3cb141fdf9957838cc2fb052c13ed95db91bf12
