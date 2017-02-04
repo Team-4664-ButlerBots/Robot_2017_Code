@@ -30,7 +30,7 @@ public class Camera {
 		camera.setResolution(480, 360);
             
         cvSink = CameraServer.getInstance().getVideo();						//video
-        cvSource = CameraServer.getInstance().putVideo("Blur", 640, 480);	//viewer
+        cvSource = CameraServer.getInstance().putVideo("Theory", 640, 480);	//viewer
 
     }
 	public void run(){
