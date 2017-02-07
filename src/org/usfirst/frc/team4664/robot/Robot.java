@@ -135,7 +135,7 @@ public class Robot extends SampleRobot {
 			array[j][3] = rectHeight;
 			array[j][4] = xDistanceFromCenter;
 			array[j][5] = yDistanceFromCenter;
-			array[j++][6] = Math.abs(array[j-1][0] - array[j][0]);	//length between contours
+			array[j++][6] = Math.abs(array[j-1][0] - array[j][0]);	//pixels between contours
 		}
 		return array;
 	}
@@ -159,7 +159,7 @@ public class Robot extends SampleRobot {
     	ArrayList<MatOfPoint> test1 = new ArrayList<MatOfPoint>();				//view processed image
     	test1 = tPipe.filterContoursOutput();
     	int[][] contourArray = obtainValues(test1);
-		while(Math.abs(contourArray[0][4]) <= 4){
+		while(Math.abs(contourArray[0][4]) <= 4 && getActiveButtons() == 1){
 			if(contourArray[0][4] > 4){
 				driveSystem.tankDrive(.4, .2);
 			}
