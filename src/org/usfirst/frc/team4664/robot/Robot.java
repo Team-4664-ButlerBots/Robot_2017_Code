@@ -70,21 +70,17 @@ public class Robot extends SampleRobot {
     	tPipe = new Pipeline();											//CV pipeline(camera processor)
 	}
 
-	//Init Stuff
 	public void robotInit() {
 		gyro.calibrate();
 	}
 
-	//Autonomous, activated in Autonomous mode
 	public void autonomous() {
 	}
-
-	//Operator mode, activated in TeleOperated mode
+	
 	public void operatorControl() {
-		//TODO Test actual code
 		driveSystem.setSafetyEnabled(true);
 		while (isOperatorControl() && isEnabled()) {
-			driveSystem.tankDrive(gamepad.getX(), gamepad.getY());
+			driveSystem.tankDrive(gamepad.getY(), gamepad.getRawAxis(3));
 			tracker = new Pipeline();
 			updateVision();
 			if(getActiveButtons() == 1){
@@ -93,10 +89,10 @@ public class Robot extends SampleRobot {
 			Timer.delay(0.005);
 		}
 	}
-
-	//Test mode, activated in Test mode
+	
 	public void test() {
 	}
+	
 	public void updateVision(){
     	cvSink.grabFrame(source);										//set source image to Video feed frame
     	tPipe.process(source);											//process source image
