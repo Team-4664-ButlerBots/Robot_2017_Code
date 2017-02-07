@@ -2,6 +2,7 @@ package org.usfirst.frc.team4664.robot;
 
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.Talon;
 
 import java.util.ArrayList;
 
@@ -10,7 +11,6 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.videoio.VideoCapture;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
@@ -20,14 +20,12 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot {
 	//Drive System Init
-	Victor lDrive = new Victor(0), rDrive = new Victor(1);
-	RobotDrive driveSystem = new RobotDrive(0, 1);
+	Talon lDrive = new Talon(0), rDrive = new Talon(1);
+	RobotDrive driveSystem = new RobotDrive(lDrive, rDrive);
 	AnalogGyro gyro = new AnalogGyro(0);
 	AnalogInput rangeFinder = new AnalogInput(1);
 	
@@ -48,7 +46,6 @@ public class Robot extends SampleRobot {
 	static int pixelsBetweenContours;
 	static int[][] contourArray;
 	
-	static NetworkTable table;
 	static Pipeline tracker;
 	
 	private static final double rangeFinderSensitivity = 1;
@@ -59,10 +56,6 @@ public class Robot extends SampleRobot {
 	
 	//RobotStuff
 	public Robot() {
-		NetworkTable.setClientMode();
-		NetworkTable.setTeam(1806);
-		NetworkTable.setIPAddress("roborio-4664-frc.local");
-		NetworkTable.initialize();
 		driveSystem.setExpiration(0.1);
 		camera = CameraServer.getInstance().startAutomaticCapture();
 		camera.setResolution(480, 360);
@@ -95,7 +88,7 @@ public class Robot extends SampleRobot {
 			tracker = new Pipeline();
 			updateVision();
 			if(getActiveButtons() == 1){
-				navigateTowardsRed();
+				navigateTowardsContour();
 			}
 			Timer.delay(0.005);
 		}
@@ -183,7 +176,7 @@ public class Robot extends SampleRobot {
     public int getActiveButtons(){
     	int count = 0;
     	for(int i = 1; i < 14; i++){						//cycles through all possible buttons
-    		if(gamepad.getRawButton(i)){				//checks for active button
+    		if(gamepad.getRawButton(i)){					//checks for active button
     			count = i;									//sets count to the highest button value being depressed
     		}
     	}

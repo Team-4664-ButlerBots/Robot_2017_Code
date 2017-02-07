@@ -20,8 +20,6 @@
   <!-- <property name="target" value=""/> -->
 
   <!-- Any other property in build.properties can also be overridden. -->
-<<<<<<< HEAD
-  
   <property file="${user.home}/wpilib/wpilib.properties"/>
   <property file="build.properties"/>
   <property file="${user.home}/wpilib/java/${version}/ant/build.properties"/>
@@ -29,13 +27,3 @@
   <import file="${wpilib.ant.dir}/build.xml"/>
 
 </project> 
-=======
-
-  <property file="${user.home}/wpilib/wpilib.properties"/>
-  <property file="build.properties"/>
-  <property file="${user.home}/wpilib/java/${version}/ant/build.properties"/>
-
-  <import file="${wpilib.ant.dir}/build.xml"/>
-
-</project>
->>>>>>> d3cb141fdf9957838cc2fb052c13ed95db91bf12
