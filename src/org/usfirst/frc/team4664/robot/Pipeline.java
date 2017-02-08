@@ -7,6 +7,8 @@ import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
 
+import edu.wpi.first.wpilibj.vision.VisionPipeline;
+
 /**
 * GripPipeline class.
 *
@@ -14,16 +16,14 @@ import org.opencv.imgproc.*;
 *
 * @author GRIP
 */
-public class Pipeline {
+
+public class Pipeline implements VisionPipeline {
 
 	//Outputs
 	private Mat blurOutput = new Mat();
-	private Mat resizeImageOutput = new Mat();
 	private Mat hslThresholdOutput = new Mat();
-	public ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
-	public ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
-	double[] centerX;
-	Mat blurInput;
+	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
+	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -32,24 +32,18 @@ public class Pipeline {
 	/**
 	 * This is the primary method that runs the entire pipeline and updates the outputs.
 	 */
-	public void process(Mat source0) {
-		// Step blur
-		blurInput = source0;
+	@Override	public void process(Mat source0) {
+		// Step Blur0:
+		Mat blurInput = source0;
 		BlurType blurType = BlurType.get("Box Blur");
-		double blurRadius = 5.538085255066387;
+		double blurRadius = 0.0;
 		blur(blurInput, blurType, blurRadius, blurOutput);
-		// Step Resize_Image0:
-		Mat resizeImageInput = blurOutput;
-		double resizeImageWidth = 480.0;
-		double resizeImageHeight = 320.0;
-		int resizeImageInterpolation = Imgproc.INTER_CUBIC;
-		resizeImage(resizeImageInput, resizeImageWidth, resizeImageHeight, resizeImageInterpolation, resizeImageOutput);
 
 		// Step HSL_Threshold0:
-		Mat hslThresholdInput = resizeImageOutput;
-		double[] hslThresholdHue = {73.0, 180.0};
-		double[] hslThresholdSaturation = {151.0, 255.0};
-		double[] hslThresholdLuminance = {48.0, 166.0};
+		Mat hslThresholdInput = blurOutput;
+		double[] hslThresholdHue = {72.84172661870504, 180.0};
+		double[] hslThresholdSaturation = {151.34892086330936, 255.0};
+		double[] hslThresholdLuminance = {48.156474820143885, 165.7935153583618};
 		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance, hslThresholdOutput);
 
 		// Step Find_Contours0:
@@ -59,27 +53,27 @@ public class Pipeline {
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 0.0;
-		double filterContoursMinPerimeter = 0.0;
-		double filterContoursMinWidth = 0.0;
-		double filterContoursMaxWidth = 10000.0;
-		double filterContoursMinHeight = 0.0;
-		double filterContoursMaxHeight = 600.0;
-		double[] filterContoursSolidity = {0.0, 100.0};
-		double filterContoursMaxVertices = 1000000.0;
-		double filterContoursMinVertices = 0.0;
-		double filterContoursMinRatio = 0.0;
-		double filterContoursMaxRatio = 1000.0;
+		double filterContoursMinArea = 40.0;
+		double filterContoursMinPerimeter = 0;
+		double filterContoursMinWidth = 0;
+		double filterContoursMaxWidth = 1000;
+		double filterContoursMinHeight = 0;
+		double filterContoursMaxHeight = 1000;
+		double[] filterContoursSolidity = {0, 100};
+		double filterContoursMaxVertices = 1000000;
+		double filterContoursMinVertices = 0;
+		double filterContoursMinRatio = 0;
+		double filterContoursMaxRatio = 1000;
 		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
 	}
 
 	/**
-	 * This method is a generated getter for the output of a Resize_Image.
-	 * @return Mat output from Resize_Image.
+	 * This method is a generated getter for the output of a Blur.
+	 * @return Mat output from Blur.
 	 */
-	public Mat resizeImageOutput() {
-		return resizeImageOutput;
+	public Mat blurOutput() {
+		return blurOutput;
 	}
 
 	/**
@@ -108,16 +102,68 @@ public class Pipeline {
 
 
 	/**
-	 * Scales and image to an exact size.
-	 * @param input The image on which to perform the Resize.
-	 * @param width The width of the output in pixels.
-	 * @param height The height of the output in pixels.
-	 * @param interpolation The type of interpolation.
+	 * An indication of which type of filter to use for a blur.
+	 * Choices are BOX, GAUSSIAN, MEDIAN, and BILATERAL
+	 */
+	enum BlurType{
+		BOX("Box Blur"), GAUSSIAN("Gaussian Blur"), MEDIAN("Median Filter"),
+			BILATERAL("Bilateral Filter");
+
+		private final String label;
+
+		BlurType(String label) {
+			this.label = label;
+		}
+
+		public static BlurType get(String type) {
+			if (BILATERAL.label.equals(type)) {
+				return BILATERAL;
+			}
+			else if (GAUSSIAN.label.equals(type)) {
+			return GAUSSIAN;
+			}
+			else if (MEDIAN.label.equals(type)) {
+				return MEDIAN;
+			}
+			else {
+				return BOX;
+			}
+		}
+
+		@Override
+		public String toString() {
+			return this.label;
+		}
+	}
+
+	/**
+	 * Softens an image using one of several filters.
+	 * @param input The image on which to perform the blur.
+	 * @param type The blurType to perform.
+	 * @param doubleRadius The radius for the blur.
 	 * @param output The image in which to store the output.
 	 */
-	private void resizeImage(Mat input, double width, double height,
-		int interpolation, Mat output) {
-		Imgproc.resize(input, output, new Size(width, height), 0.0, 0.0, interpolation);
+	private void blur(Mat input, BlurType type, double doubleRadius,
+		Mat output) {
+		int radius = (int)(doubleRadius + 0.5);
+		int kernelSize;
+		switch(type){
+			case BOX:
+				kernelSize = 2 * radius + 1;
+				Imgproc.blur(input, output, new Size(kernelSize, kernelSize));
+				break;
+			case GAUSSIAN:
+				kernelSize = 6 * radius + 1;
+				Imgproc.GaussianBlur(input,output, new Size(kernelSize, kernelSize), radius);
+				break;
+			case MEDIAN:
+				kernelSize = 2 * radius + 1;
+				Imgproc.medianBlur(input, output, kernelSize);
+				break;
+			case BILATERAL:
+				Imgproc.bilateralFilter(input, output, -1, radius, radius);
+				break;
+		}
 	}
 
 	/**
@@ -203,60 +249,8 @@ public class Pipeline {
 			if (contour.rows() < minVertexCount || contour.rows() > maxVertexCount)	continue;
 			final double ratio = bb.width / (double)bb.height;
 			if (ratio < minRatio || ratio > maxRatio) continue;
-			output.add(contour);			
-			Imgcodecs.imwrite("output.png", blurInput);
+			output.add(contour);
 		}
 	}
-	enum BlurType{
-		BOX("Box Blur"), GAUSSIAN("Gaussian Blur"), MEDIAN("Median Filter"),
-			BILATERAL("Bilateral Filter");
 
-		private final String label;
-
-		BlurType(String label) {
-			this.label = label;
-		}
-
-		public static BlurType get(String type) {
-			if (BILATERAL.label.equals(type)) {
-				return BILATERAL;
-			}
-			else if (GAUSSIAN.label.equals(type)) {
-			return GAUSSIAN;
-			}
-			else if (MEDIAN.label.equals(type)) {
-				return MEDIAN;
-			}
-			else {
-				return BOX;
-			}
-		}
-
-		@Override
-		public String toString() {
-			return this.label;
-		}
-	}
-	private void blur(Mat input, BlurType type, double doubleRadius,
-			Mat output) {
-			int radius = (int)(doubleRadius + 0.5);
-			int kernelSize;
-			switch(type){
-				case BOX:
-					kernelSize = 2 * radius + 1;
-					Imgproc.blur(input, output, new Size(kernelSize, kernelSize));
-					break;
-				case GAUSSIAN:
-					kernelSize = 6 * radius + 1;
-					Imgproc.GaussianBlur(input,output, new Size(kernelSize, kernelSize), radius);
-					break;
-				case MEDIAN:
-					kernelSize = 2 * radius + 1;
-					Imgproc.medianBlur(input, output, kernelSize);
-					break;
-				case BILATERAL:
-					Imgproc.bilateralFilter(input, output, -1, radius, radius);
-					break;
-			}
-		}
-	}
+}

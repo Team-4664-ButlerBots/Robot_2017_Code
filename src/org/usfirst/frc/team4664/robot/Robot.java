@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionThread;
 
 public class Robot extends SampleRobot {
 	//Drive System Init
@@ -32,6 +33,7 @@ public class Robot extends SampleRobot {
 	UsbCamera camera;
 	CvSink cvSink;
 	CvSource cvSource;
+	VisionThread visionThread;
 	Pipeline tPipe;
 	Mat source;
 	Mat somethingidk;
@@ -40,11 +42,11 @@ public class Robot extends SampleRobot {
 	public static final double CAMERA_PIXEL_WIDTH = 640;
 	public static final double WIDTH_BETWEEN_TARGET = 8.5;
 	
-	static double distanceFromTarget;
-	static double lengthError;
+	double distanceFromTarget;
+	double lengthError;
 	
-	static int pixelsBetweenContours;
-	static int[][] contourArray;
+	int pixelsBetweenContours;
+	int[][] contourArray;
 	
 	static Pipeline tracker;
 	
@@ -61,7 +63,7 @@ public class Robot extends SampleRobot {
 		camera.setResolution(480, 360);
             
         cvSink = CameraServer.getInstance().getVideo();						//video
-        cvSource = CameraServer.getInstance().putVideo("cam0", 640, 480);	//viewer
+        cvSource = CameraServer.getInstance().putVideo("Theory", 640, 480);	//viewer
 		rangeFinder.setOversampleBits(8);
 		rangeFinder.setAverageBits(4);
     	source = new Mat();												//source image
@@ -71,7 +73,19 @@ public class Robot extends SampleRobot {
 	}
 
 	public void robotInit() {
-		gyro.calibrate();
+		gyro.calibrate();    
+        visionThread = new VisionThread(camera, new Pipeline(), pipeline -> {    	
+        	cvSink.grabFrame(source);										//set source image to Video feed frame
+        	tPipe.process(source);											//process source image
+        	if(tPipe.filterContoursOutput().size() >= 2){
+            	Imgproc.drawContours(source, tPipe.filterContoursOutput(), 0, new Scalar(0,255,255));
+            	Imgproc.drawContours(source, tPipe.filterContoursOutput(), 1, new Scalar(0,255,255));
+        	}
+        	cvSource.putFrame(source);										//view processed image
+        	test = tPipe.filterContoursOutput();
+        	contourArray = obtainValues(test);
+        });
+        visionThread.start();
 	}
 
 	public void autonomous() {
@@ -82,7 +96,6 @@ public class Robot extends SampleRobot {
 		while (isOperatorControl() && isEnabled()) {
 			driveSystem.tankDrive(gamepad.getY(), gamepad.getRawAxis(3));
 			tracker = new Pipeline();
-			updateVision();
 			if(getActiveButtons() == 1){
 				navigateTowardsContour();
 			}
@@ -93,16 +106,8 @@ public class Robot extends SampleRobot {
 	public void test() {
 	}
 	
-	public void updateVision(){
-    	cvSink.grabFrame(source);										//set source image to Video feed frame
-    	tPipe.process(source);											//process source image
-    	Imgproc.drawContours(source, tPipe.filterContoursOutput(), 10, new Scalar(0,255,255));
-    	cvSource.putFrame(source);										//view processed image
-    	test = tPipe.filterContoursOutput();
-    	contourArray = obtainValues(test);
-	}
 	public int[][] obtainValues(ArrayList<MatOfPoint> m){
-		int[][] array = new int[20][7];
+		int[][] array = new int[m.size()][7];
 		for(MatOfPoint i : m){
 			int j = 0;
 			Rect rectangle = Imgproc.boundingRect(i);
@@ -111,7 +116,7 @@ public class Robot extends SampleRobot {
 			int rectX = (int) (.5 * rectangle.width + rectangle.x);
 			int rectY = (int) (.5 * rectangle.height + rectangle.y);
 			int xDistanceFromCenter = (int) (CAMERA_PIXEL_WIDTH - rectX);
-			int yDistanceFromCenter = 480 - rectY;
+			int yDistanceFromCenter = 360 - rectY;
 			SmartDashboard.putNumber("Contour " + j +" X Value", rectX);
 			SmartDashboard.putNumber("Contour " + j +" Y Value", rectY);
 			SmartDashboard.putNumber("Contour " + j +" X Offset", xDistanceFromCenter);
