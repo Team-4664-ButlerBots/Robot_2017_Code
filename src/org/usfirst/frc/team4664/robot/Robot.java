@@ -61,7 +61,7 @@ public class Robot extends SampleRobot {
 		camera.setResolution(480, 360);
             
         cvSink = CameraServer.getInstance().getVideo();						//video
-        cvSource = CameraServer.getInstance().putVideo("Theory", 640, 480);	//viewer
+        cvSource = CameraServer.getInstance().putVideo("cam0", 640, 480);	//viewer
 		rangeFinder.setOversampleBits(8);
 		rangeFinder.setAverageBits(4);
     	source = new Mat();												//source image
