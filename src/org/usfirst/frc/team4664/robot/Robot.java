@@ -60,7 +60,7 @@ public class Robot extends SampleRobot {
 	public Robot() {
 		driveSystem.setExpiration(0.1);
 		camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(480, 360);
+		camera.setResolution(320, 240);
 		rangeFinder.setOversampleBits(8);
 		rangeFinder.setAverageBits(4);
     	source = new Mat();												//source image
@@ -73,7 +73,7 @@ public class Robot extends SampleRobot {
 		gyro.calibrate();    
         visionThread = new Thread(() -> {    	
             cvSink = CameraServer.getInstance().getVideo();						//video
-            cvSource = CameraServer.getInstance().putVideo("Theory", 640, 480);	//viewer
+            cvSource = CameraServer.getInstance().putVideo("Theory", 320, 240);	//viewer
             while(!Thread.interrupted()){
             	cvSink.grabFrame(source);										//set source image to Video feed frame
             	tPipe.process(source);											//process source image
