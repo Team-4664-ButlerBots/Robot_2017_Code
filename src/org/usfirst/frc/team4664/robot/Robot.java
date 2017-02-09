@@ -33,7 +33,6 @@ public class Robot extends SampleRobot {
 	UsbCamera camera;
 	CvSink cvSink;
 	CvSource cvSource;
-	VisionThread visionThread;
 	Pipeline tPipe;
 	Mat source;
 	Mat somethingidk;
@@ -51,6 +50,7 @@ public class Robot extends SampleRobot {
 	static Pipeline tracker;
 	
 	private static final double rangeFinderSensitivity = 1;
+	Thread visionThread;
 	
 	//Joystick Declaration
 	Joystick gamepad = new Joystick(0);
@@ -61,9 +61,6 @@ public class Robot extends SampleRobot {
 		driveSystem.setExpiration(0.1);
 		camera = CameraServer.getInstance().startAutomaticCapture();
 		camera.setResolution(480, 360);
-            
-        cvSink = CameraServer.getInstance().getVideo();						//video
-        cvSource = CameraServer.getInstance().putVideo("Theory", 640, 480);	//viewer
 		rangeFinder.setOversampleBits(8);
 		rangeFinder.setAverageBits(4);
     	source = new Mat();												//source image
@@ -74,17 +71,21 @@ public class Robot extends SampleRobot {
 
 	public void robotInit() {
 		gyro.calibrate();    
-        visionThread = new VisionThread(camera, new Pipeline(), pipeline -> {    	
-        	cvSink.grabFrame(source);										//set source image to Video feed frame
-        	tPipe.process(source);											//process source image
-        	if(tPipe.filterContoursOutput().size() >= 2){
-            	Imgproc.drawContours(source, tPipe.filterContoursOutput(), 0, new Scalar(0,255,255));
-            	Imgproc.drawContours(source, tPipe.filterContoursOutput(), 1, new Scalar(0,255,255));
-        	}
-        	cvSource.putFrame(source);										//view processed image
-        	test = tPipe.filterContoursOutput();
-        	contourArray = obtainValues(test);
+        visionThread = new Thread(() -> {    	
+            cvSink = CameraServer.getInstance().getVideo();						//video
+            cvSource = CameraServer.getInstance().putVideo("Theory", 640, 480);	//viewer
+            while(!Thread.interrupted()){
+            	cvSink.grabFrame(source);										//set source image to Video feed frame
+            	tPipe.process(source);											//process source image
+            	for(int i = 0; i < tPipe.filterContoursOutput().size(); i++){
+                	Imgproc.drawContours(source, tPipe.filterContoursOutput(), i, new Scalar(0,255,255));
+            	}
+            	cvSource.putFrame(source);										//view processed image
+            	test = tPipe.filterContoursOutput();
+            	contourArray = obtainValues(test);
+            }
         });
+        visionThread.setDaemon(true);
         visionThread.start();
 	}
 
