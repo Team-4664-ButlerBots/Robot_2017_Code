@@ -17,7 +17,7 @@ public class CustomCV {
 	public CustomCV(){
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		Mat image = Imgcodecs.imread("M:\\Programming\\2017VisionExample\\Vision Images\\LED Peg\\1ftH3ftD2Angle0Brightness.jpg");
-	    Imgcodecs.imwrite("C:\\Users\\andy_zheng422\\Desktop\\lines.jpg", houghDetector(image));
+	    Imgcodecs.imwrite("M:\\Programming\\lines.jpg", houghDetector(image));
 	}
 	public static void main(String[] args){
 		CustomCV cv = new CustomCV();
