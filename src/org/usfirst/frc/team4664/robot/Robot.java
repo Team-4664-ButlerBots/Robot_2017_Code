@@ -5,59 +5,66 @@ import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 
-public class Robot extends SampleRobot implements Constants{
-	public AnalogGyro gyro;	
-	RobotDrive driveSystem = new RobotDrive(0, 1);
-	Range_Finder ultraSonic;
-
+public class Robot extends SampleRobot /*implements Constants*/{
+	//AnalogGyro gyro;	
+	
+	//Range_Finder ultraSonic;
+	RobotDrive driveSystem;
+	Victor leftDrive,rightDrive;
 	//Joystick Declaration
-	Joystick gamepad = new Joystick(0);
-	Joystick stick   = new Joystick(1);
+	Joystick gamepad;
+	Joystick stick;   
 	Robot() {
-		driveSystem.setExpiration(0.1);
-		gyro = new AnalogGyro(0);
-		gyro.calibrate();
-		ultraSonic = new Range_Finder(1);
+//		leftDrive = new Victor(0);
+//		rightDrive = new Victor(1);
+//		driveSystem = new RobotDrive(0, 1);
+//		gamepad = new Joystick(0);
+//		stick   = new Joystick(1);
+//		driveSystem.setExpiration(0.1);
+		//gyro = new AnalogGyro(0);
+		//gyro.calibrate();
+		//ultraSonic = new Range_Finder(1);
 	}
 
-	//Init Stuff
-	public void robotInit() {
-	}
+//	//Init Stuff
+//	public void robotInit() {
+//	}
 
 	//Autonomous, activated in Autonomous mode
 	public void autonomous() {
-		switch(0){
-		case 0:
-			auto0();
-			break;
-			
-		}
+//		switch(0){
+//		case 0:
+//			auto0();
+//			break;
+//			
+//		}
 	}
 
 	//Operator mode, activated in TeleOperated mode
 	public void operatorControl() {
-		//TODO Test actual code
-		driveSystem.setSafetyEnabled(true);
-		while (isOperatorControl() && isEnabled()) {
-			if(gamepad.getRawButton(9)){
-				driveSystem.tankDrive(0.0, 0.0);
-				System.out.println("Emergency disabled for 5 seconds");
-				Timer.delay(5);
-			}
-			//driveSystem.tankDrive(speedStepL.SpeedStepper(gamepadr.getY()), speedStepR.SpeedStepper(gamepad.getTwist()));
-			driveSystem.tankDrive(gamepad.getY()*0.9, gamepad.getRawAxis(3)*0.9);
-		}
+//		//TODO Test actual code
+//		driveSystem.setSafetyEnabled(true);
+//		while (isOperatorControl() && isEnabled()) {
+//			if(gamepad.getRawButton(9)){
+//				driveSystem.tankDrive(0.0, 0.0);
+//				System.out.println("Emergency disabled for 5 seconds");
+//				Timer.delay(5);
+//			}
+//			//driveSystem.tankDrive(speedStepL.SpeedStepper(gamepadr.getY()), speedStepR.SpeedStepper(gamepad.getTwist()));
+//			driveSystem.tankDrive(gamepad.getY()*0.9, gamepad.getRawAxis(3)*0.9);
+//		}
 	}
-	public void auto0(){
-		while(isEnabled()){
-			if(ultraSonic.getDistance()>30){
-				driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
-				//Limit reached Driving blind for 1 seconds
-			}else{
-				Timer.delay(1);
-				driveSystem.arcadeDrive(0, 0);
-			}
-		}
-	}
+//	public void auto0(){
+//		while(isEnabled()){
+//			if(ultraSonic.getDistance()>30){
+//				driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
+//				//Limit reached Driving blind for 1 seconds
+//			}else{
+//				Timer.delay(1);
+//				driveSystem.arcadeDrive(0, 0);
+//			}
+//		}
+//	}
 }
