@@ -7,38 +7,36 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends SampleRobot implements Constants{
-	public AnalogGyro gyro;	
-	RobotDrive driveSystem = new RobotDrive(0, 1);
-	Range_Finder ultraSonic;
-
-	//Joystick Declaration
-	Joystick gamepad = new Joystick(0);
-	Joystick stick   = new Joystick(1);
-
-	Robot() {
+	RobotDrive driveSystem;
+	Joystick stick;
+	Joystick gamepad;
+	AnalogGyro gyro;
+	public Robot() {
+		driveSystem = new RobotDrive(lsMotor, rsMotor);
 		driveSystem.setExpiration(0.1);
+		stick = new Joystick(gamepadPort);
+		gamepad = new Joystick(joystickPort);
 		gyro = new AnalogGyro(0);
 		gyro.calibrate();
-		ultraSonic=new Range_Finder(3);
 	}
 
-	//Init Stuff
+	@Override
 	public void robotInit() {
 	}
 
-	//Autonomous, activated in Autonomous mode
+	@Override
 	public void autonomous() {
 		switch(0){
 		case 0:
-			auto0();
+		auto0();
 			break;
 			
 		}
 	}
+	
 
-	//Operator mode, activated in TeleOperated mode
+	@Override
 	public void operatorControl() {
-		//TODO Test actual code
 		driveSystem.setSafetyEnabled(true);
 		while (isOperatorControl() && isEnabled()) {
 			if(gamepad.getRawButton(9)){
@@ -50,15 +48,26 @@ public class Robot extends SampleRobot implements Constants{
 			driveSystem.tankDrive(gamepad.getY()*0.9, gamepad.getRawAxis(3)*0.9);
 		}
 	}
+	
+
+	@Override
+	public void test() {
+	}
+
+
 	public void auto0(){
 		while(isEnabled()){
-			if(ultraSonic.getDistance()>30){
-				driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
-				//Limit reached Driving blind for 1 seconds
-			}else{
-				Timer.delay(1);
-				driveSystem.arcadeDrive(0, 0);
+			//if(ultraSonic.getDistance()>30){
+			if(1==1){
+			driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
+			//Limit reached Driving blind for 1 seconds
+			
+		}else{
+			Timer.delay(1);
+			driveSystem.arcadeDrive(0, 0);
 			}
 		}
 	}
 }
+
+
