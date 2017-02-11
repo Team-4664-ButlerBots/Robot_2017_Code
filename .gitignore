@@ -8,3 +8,5 @@ sysProps.xml
 .classpath
 .project
 .settings/
+build.*
+jars/

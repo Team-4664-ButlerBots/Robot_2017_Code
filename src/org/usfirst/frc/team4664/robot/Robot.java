@@ -30,11 +30,12 @@ public class Robot extends SampleRobot {
 	AnalogGyro gyro = new AnalogGyro(0);
 	AnalogInput rangeFinder = new AnalogInput(1);
 	
+	CustomCV customCV;
 	UsbCamera camera;
-	CvSink cvSink;
-	CvSource cvSource;
+	CvSink cameraFeed;
+	CvSource cameraViewer;
 	Pipeline tPipe;
-	Mat source;
+	Mat sourceimg;
 	Mat somethingidk;
 	ArrayList<MatOfPoint> test;	
 	public static final double OFFSET_TO_EDGE = 0;//To the Edge of the Robot
@@ -63,7 +64,8 @@ public class Robot extends SampleRobot {
 		camera.setResolution(320, 240);
 		rangeFinder.setOversampleBits(8);
 		rangeFinder.setAverageBits(4);
-    	source = new Mat();												//source image
+		customCV = new CustomCV();
+    	sourceimg = new Mat();												//source image
     	somethingidk = new Mat();										//unused image
     	test = new ArrayList<MatOfPoint>();								//array of shapes(i.e. contours/blobs/rectangles)
     	tPipe = new Pipeline();											//CV pipeline(camera processor)
@@ -72,15 +74,16 @@ public class Robot extends SampleRobot {
 	public void robotInit() {
 		gyro.calibrate();    
         visionThread = new Thread(() -> {    	
-            cvSink = CameraServer.getInstance().getVideo();						//video
-            cvSource = CameraServer.getInstance().putVideo("Theory", 320, 240);	//viewer
+            cameraFeed = CameraServer.getInstance().getVideo();						//video
+            cameraViewer = CameraServer.getInstance().putVideo("Theory", 320, 240);	//viewer
             while(!Thread.interrupted()){
-            	cvSink.grabFrame(source);										//set source image to Video feed frame
-            	tPipe.process(source);											//process source image
-            	for(int i = 0; i < tPipe.filterContoursOutput().size(); i++){
-                	Imgproc.drawContours(source, tPipe.filterContoursOutput(), i, new Scalar(0,255,255));
-            	}
-            	cvSource.putFrame(source);										//view processed image
+            	cameraFeed.grabFrame(sourceimg);										//set source image to Video feed frame
+            	//tPipe.process(sourceimg);											//process source image
+            	//for(int i = 0; i < tPipe.filterContoursOutput().size(); i++){
+                	//Imgproc.drawContours(sourceimg, tPipe.filterContoursOutput(), i, new Scalar(0,255,255));
+            	//}
+            	
+            	cameraViewer.putFrame(customCV.houghDetector(sourceimg));										//view processed image
             	test = tPipe.filterContoursOutput();
             	contourArray = obtainValues(test);
             }
@@ -171,8 +174,7 @@ public class Robot extends SampleRobot {
 			}
 			else if(getAngle() < -4){
 				driveSystem.tankDrive(.2, .4);
-			}
-			Timer.delay(0.005);
+			}			Timer.delay(0.005);
 		}
 	}
     public int getActiveButtons(){
@@ -180,6 +182,7 @@ public class Robot extends SampleRobot {
     	for(int i = 1; i < 14; i++){						//cycles through all possible buttons
     		if(gamepad.getRawButton(i)){					//checks for active button
     			count = i;									//sets count to the highest button value being depressed
+    			SmartDashboard.putNumber("Button: ", count);
     		}
     	}
 		return count;										//returns the highest depressed button number
