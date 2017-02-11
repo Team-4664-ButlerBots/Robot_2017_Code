@@ -38,6 +38,8 @@ public class Robot extends SampleRobot {
 	Mat sourceimg;
 	Mat somethingidk;
 	ArrayList<MatOfPoint> test;	
+	
+	
 	public static final double OFFSET_TO_EDGE = 0;//To the Edge of the Robot
 	public static final double CAMERA_PIXEL_WIDTH = 640;
 	public static final double WIDTH_BETWEEN_TARGET = 8.5;
