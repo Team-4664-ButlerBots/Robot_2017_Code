@@ -6,16 +6,15 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Robot extends SampleRobot {
-	AnalogGyro gyro;
-	RobotDrive driveSystem;
-	
+public class Robot extends SampleRobot implements Constants{
+	public AnalogGyro gyro;	
+	RobotDrive driveSystem = new RobotDrive(0, 1);
 	Range_Finder ultraSonic;
+
 	//Joystick Declaration
 	Joystick gamepad = new Joystick(0);
 	Joystick stick   = new Joystick(1);
-	public Robot() {
-		driveSystem = new RobotDrive(0, 1);
+	Robot() {
 		driveSystem.setExpiration(0.1);
 		gyro = new AnalogGyro(0);
 		gyro.calibrate();
