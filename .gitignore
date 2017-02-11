@@ -1,9 +1,4 @@
 bin/
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 20c704f794535164f5313f07d1f3d39761b3e1a0
 build/
 dist/
 sysProps.xml
@@ -13,9 +8,5 @@ sysProps.xml
 .classpath
 .project
 .settings/
-<<<<<<< HEAD
-=======
->>>>>>> 07611698ce8aba4991c166d7849d8284bbda5c92
-=======
->>>>>>> d3cb141fdf9957838cc2fb052c13ed95db91bf12
->>>>>>> 20c704f794535164f5313f07d1f3d39761b3e1a0
+build.*
+jars/
