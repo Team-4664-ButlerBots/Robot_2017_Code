@@ -51,7 +51,9 @@ public class Robot extends SampleRobot implements Constants{
 			//driveSystem.tankDrive(speedStepL.SpeedStepper(gamepadr.getY()), speedStepR.SpeedStepper(gamepad.getTwist()));
 			//the deadband function receives the inputs gamepad axis and deadband constant
 			//it takes these and makes sure no input is given when under the deadband constant.
-			driveSystem.tankDrive(deadBand(gamepad.getY(),driveDb)*maxSpeed, deadBand(gamepad.getRawAxis(3),driveDb)*maxSpeed);
+			driveSystem.tankDrive(Deadband(gamepad.getY(),driveDb)*maxSpeed, Deadband(gamepad.getRawAxis(3),driveDb)*maxSpeed);
+			SmartDashboard.putNumber("deadBand: ", Deadband(gamepad.getY(),driveDb));
+			SmartDashboard.putNumber("raw value ", gamepad.getY());
 			Timer.delay(0.03);
 		}
 	}
@@ -67,6 +69,7 @@ public class Robot extends SampleRobot implements Constants{
 			if(ultraSonic.getDistance()>=30){
 		 	//driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
 			SmartDashboard.putNumber("UltraSonic Distance : ", ultraSonic.getDistance());
+			SmartDashboard.putNumber("UltraSonic Voltage : ", ultraSonic.getVolt());
 			
 		}else{
 			Timer.delay(1);
@@ -75,11 +78,15 @@ public class Robot extends SampleRobot implements Constants{
 			}
 		}
 	}
-	public double deadBand(double AxisInput,double deadband){
-		if(Math.abs(AxisInput)<deadband){
-			return 0;
+	Double Deadband(double AxisInput,double deadband){
+		if(Math.abs(AxisInput)<=deadband){
+			return 0.0;
+		}else if(AxisInput>deadband){
+			return (AxisInput - deadband) / (1.0 - deadband);
+		}else{
+			return (AxisInput + deadband) / (1.0 - deadband);
 		}
-		return AxisInput;
+		
 	}
 	
 }

@@ -17,15 +17,18 @@ public class Range_Finder{
 	
 	
 	public Range_Finder(int port){
-		sFactor = 5120 / 10; // cm per Volt; 5120 mm/Volt
+		sFactor = 5120 ; // cm per Volt; 5120 mm/Volt
 		aInput = new AnalogInput(port);
 		aInput.setOversampleBits(8);
 		aInput.setAverageBits(4);
 	}
 	
 	public double getDistance(){
-		double voltage = aInput.getVoltage();
+		double voltage = aInput.getAverageVoltage();
 		double distance = voltage * sFactor;
 		return distance;
      }
+	public double getVolt(){
+		return aInput.getAverageVoltage();
+	}
 }	

@@ -1,8 +1,8 @@
 package org.usfirst.frc.team4664.robot;
 
 public interface Constants {
-	final int lsMotor	    = 0;
-    final int rsMotor	    = 1;
+	final int lsMotor	    = 1;
+    final int rsMotor	    = 0;
 //joystick 2 buttons
     final int latticeUpB    = 3;
     final int latticeDownB 	= 2;
@@ -15,7 +15,7 @@ public interface Constants {
     final double latticeUp     = 0.8;
     final double latticeDown   = -.5;
 //dead band variables
-    final double driveDb    = 0.5;
+    final double driveDb    = 0.2;
     final double armTorqueDb = 0.2;
 //Laptop ports
     final int gamepadPort	= 1;
@@ -24,6 +24,6 @@ public interface Constants {
     final int rangeFinder   = 0;
     final int gyroSense   = 1;
 //Scale Factors
-    final double maxSpeed   = 0.85;
+    final double maxSpeed   = -0.85;//negative to flip direction
 
 }
