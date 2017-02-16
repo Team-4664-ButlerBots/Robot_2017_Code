@@ -1,9 +1,14 @@
 package org.usfirst.frc.team4664.robot;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -25,6 +30,80 @@ public class CustomCV {
 	 * @param img
 	 * @return
 	 */
+	public Point getCenter(Mat inImg){
+		counter = new int[3];				//[0] = x counter [1] = y counter [2] = point counter
+		Mat imgGrey = new Mat();
+		Point center = new Point();
+		imgGrey = hsl(inImg);
+		System.out.println(imgGrey.cols());
+		System.out.println(imgGrey.rows());
+		System.out.println(imgGrey.size());
+		Point[] points = new Point[]{new Point(), new Point()};
+		for(int i = 0; i < imgGrey.rows(); i++){
+			for(int j = 0; j < imgGrey.cols(); j++){
+				double[] test = imgGrey.get(i, j);
+				if(test[0] != 0){
+					System.out.println(test[0]);
+					counter[0] += i;	//x
+					counter[1] += i;	//y
+					counter[2] += 1;	//counter
+				}
+			}
+		}
+		center.x = counter[0]/counter[2];
+		center.y = counter[1]/counter[2];
+		Point centerOffset = new Point(center.x + 4, center.y + 4);
+		Imgproc.rectangle(imgGrey, center, centerOffset, new Scalar(0,0,0));
+	    Imgcodecs.imwrite("M:\\Programming\\lines1.jpg", imgGrey);
+		//Imgproc.rectangle(image, new Point((int)(counter[0]/counter[2]) - 2, (int)(counter[0]/counter[2]) - 2), new Point((int)(counter[1]/counter[2]) + 2, (int)(counter[1]/counter[2]) + 2), new Scalar(0,0,255)); // draw a 4 pixel square around the center
+		return center;
+	}
+	public MatOfPoint[] sortShapes(Mat input){
+		ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+		Pipeline tP = new Pipeline();
+		tP.process(input);
+		contours = tP.findContoursOutput();
+//		Mat hierarchy = new Mat();
+//		contours.clear();
+//		int mode = Imgproc.RETR_EXTERNAL;
+//		int method = Imgproc.CHAIN_APPROX_SIMPLE;
+//		Imgproc.findContours(input, contours, hierarchy, mode, method);
+		MatOfPoint[] contoursOrdered = new MatOfPoint[2];
+		ArrayList<Double> contourArea = new ArrayList<Double>();
+		for (int i = 0; i < contours.size(); i++) {
+			MatOfPoint contour = contours.get(i);
+			Rect bb = Imgproc.boundingRect(contour);
+			if (bb.width < 5 ) continue;
+			if (bb.height < 5 ) continue;
+			contourArea.add(bb.area());
+		}
+		while(contourArea.get(0) < contourArea.get(1) && contourArea.get(1) < contourArea.get(2)){
+			for(int i = 0; i < contourArea.size()-1; i++){
+				System.out.println(contourArea.size()); 
+				if(contourArea.get(i) < contourArea.get(i+1)){
+					contourArea.set(i, contourArea.set(i+1, contourArea.get(i)));
+				}
+			}
+		}
+		for(int i = 0; i < contours.size(); i++){
+			MatOfPoint contour = contours.get(i);
+			Rect bb = Imgproc.boundingRect(contour);
+			if(bb.area() == contourArea.get(0)){
+				contoursOrdered[0] = contours.get(i);
+			}
+			if(bb.area() == contourArea.get(1)){
+				contoursOrdered[1] = contours.get(i);
+			}
+		}
+		return contoursOrdered;
+	}
+	public Mat drawRect(Mat input) {
+		Rect rect0 = Imgproc.boundingRect(sortShapes(input)[0]);
+		Rect rect1 = Imgproc.boundingRect(sortShapes(input)[1]);
+		Imgproc.rectangle(input, rect0.tl(), rect0.br(), new Scalar(0, 255, 0));
+		Imgproc.rectangle(input, rect1.tl(), rect1.br(), new Scalar(0, 255, 0));
+		return input;
+	}
 	public Mat houghDetector(Mat img){
 		counter = new int[3];				//[0] = x counter [1] = y counter [2] point counter
 		Mat imgGrey = new Mat();
@@ -38,41 +117,29 @@ public class CustomCV {
 		System.out.println(lines.cols());
 		System.out.println(lines.rows());
 		System.out.println(lines.size());
-		Point[][] shapes = filterOutliers(lines);
-		int shapeIndex = filterShapes(shapes)[0];
-		for(int i = 0; i <= shapes[filterShapes(shapes)[0]].length; i += 2){
-			counter[0] += shapes[shapeIndex][i].x;
-			counter[1] += shapes[shapeIndex][i].y;
-			counter[3]++;
-			Imgproc.line(img, shapes[shapeIndex][i], shapes[shapeIndex][i++], new Scalar(0, 0, 255));
+		Point[] points = new Point[]{new Point(), new Point()};
+		for(int i = 0; i < lines.rows(); i++){
+			double[] vec = lines.get(i, 0);
+			counter[0] += vec[0];
+			counter[1] += vec[1];//			counter[0] += vec[2];
+			counter[1] += vec[3];
+			counter[2] += 2;
+			points[0].x = vec[0];
+			points[0].y = vec[1];
+			points[1].x = vec[2];
+			points[1].y = vec[3];
+			//System.out.println(points[0].x);
+			//System.out.println(points[0].y);
+			//System.out.println(points[1].x);
+			//System.out.println(points[1].y);
+			Imgproc.line(image, points[0], points[1], new Scalar(0,0,255));
 		}
-		shapeIndex = filterShapes(shapes)[1];
-		for(int i = 0; i <= shapes[filterShapes(shapes)[0]].length; i += 2){
-			counter[0] += shapes[shapeIndex][i].x;
-			counter[1] += shapes[shapeIndex][i].y;
-			counter[3]++;
-			Imgproc.line(img, shapes[shapeIndex][i], shapes[shapeIndex][i++], new Scalar(0, 0, 255));
-		}
-		
-//		Point[] points = new Point[]{new Point(), new Point()};
-//		for(int i = 0; i < lines.rows(); i++){
-//			double[] vec = lines.get(i, 0);
-//			counter[0] += vec[0];
-//			counter[1] += vec[1];
-//			counter[0] += vec[2];
-//			counter[1] += vec[3];
-//			counter[2] += 2;
-//			points[0].x = vec[0];
-//			points[0].y = vec[1];
-//			points[1].x = vec[2];
-//			points[1].y = vec[3];
-//			System.out.println(points[0].x);
-//			System.out.println(points[0].y);
-//			System.out.println(points[1].x);
-//			System.out.println(points[1].y);
-//			Imgproc.line(image, points[0], points[1], new Scalar(0,0,255));
-//		}
-		Imgproc.rectangle(image, new Point((int)(counter[0]/counter[2]) - 2, (int)(counter[0]/counter[2]) - 2), new Point((int)(counter[1]/counter[2]) + 2, (int)(counter[1]/counter[2]) + 2), new Scalar(0,0,255)); // draw a 4 pixel square around the center
+		Point center = getCenter(image);
+		System.out.println(center.x);
+		System.out.println(center.y);
+		Point centerOffset = new Point(center.x + 4, center.y + 4);
+		Imgproc.rectangle(image, center, centerOffset, new Scalar(0,0,255)); // draw a 4 pixel square around the center
+		drawRect(image);
 		return image;
 	}
 	private Mat hsl(Mat sourceimg){
@@ -83,73 +150,5 @@ public class CustomCV {
 		Imgproc.cvtColor(sourceimg, hslThresholdOutput, Imgproc.COLOR_BGR2HLS);
 		Core.inRange(hslThresholdOutput, new Scalar(hslThresholdHue[0], hslThresholdLuminance[0], hslThresholdSaturation[0]), new Scalar(hslThresholdHue[1], hslThresholdLuminance[1], hslThresholdSaturation[1]), hslThresholdOutput);
 		return hslThresholdOutput;
-	}
-	private Point[][] filterOutliers(Mat linesIn){
-		Point shapes[][] = new Point[11][203];
-		int[][] filterLines = new int[11][3];
-		int shapesCounter = 0;
-		int shapesPointCounter = 0;
-		for(int i = 0, k = 0; i < 200; i++){
-			if(i == 199){
-				k++;
-			}
-			shapes[k][i] = new Point();
-		}
-		for(int i = 0; i < linesIn.rows(); i++){
-			double[] vec = lines.get(i, 0);
-			if(filterLines[shapesCounter][2] == 0){
-				filterLines[shapesCounter][0] += vec[0] + vec[2];// X
-				filterLines[shapesCounter][1] += vec[1] + vec[3];// Y
-				filterLines[shapesCounter][2] += 2;
-				shapes[shapesCounter][shapesPointCounter].x = vec[0];
-				shapes[shapesCounter][shapesPointCounter++].y = vec[1];
-				shapes[shapesCounter][shapesPointCounter].x = vec[2];
-				shapes[shapesCounter][shapesPointCounter++].y = vec[3];
-			}
-			else if((Math.abs(filterLines[shapesCounter][0]/filterLines[shapesCounter][2] - (vec[0] + vec[2])) < 10) && (Math.abs(filterLines[shapesCounter][0]/filterLines[shapesCounter][2] - (vec[0] + vec[1])) < 10) || filterLines[shapesCounter][0] == 0){
-				filterLines[shapesCounter][0] += vec[0] + vec[2];// X
-				filterLines[shapesCounter][1] += vec[1] + vec[3];// Y
-				filterLines[shapesCounter][2] += 2;
-				shapes[shapesCounter][shapesPointCounter].x = vec[0];
-				shapes[shapesCounter][shapesPointCounter++].y = vec[1];
-				shapes[shapesCounter][shapesPointCounter].x = vec[2];
-				shapes[shapesCounter][shapesPointCounter++].y = vec[3];
-			}
-			else if(shapesCounter < 11){
-				shapesCounter++;				
-				filterLines[shapesCounter][0] += vec[0] + vec[2];// X
-				filterLines[shapesCounter][1] += vec[1] + vec[3];// Y
-				filterLines[shapesCounter][2] += 2;
-				System.out.println(shapesPointCounter);
-				shapes[shapesCounter][shapesPointCounter].x = (int)vec[0];
-				shapes[shapesCounter][shapesPointCounter++].y = (int)vec[1];
-				shapes[shapesCounter][shapesPointCounter].x = (int)vec[2];
-				shapes[shapesCounter][shapesPointCounter++].y = (int)vec[3];
-			}
-		}
-		return shapes;
-	}
-	private int[] filterShapes(Point[][] shapesIn){
-		int[] index = new int[2];
-		for(int i = 0, count = 0; i < shapesIn.length; i++){
-			if(i == 0){
-				index[count++] = shapesIn[i].length;	//lines in a shape
-			}
-			else if(index[1] <= shapesIn[i].length && index[0] >= shapesIn[i].length){	//if Index 1 is less than the new number, but index 0 is larger than the new number, place the new number in index 1;
-				index[1] = i;
-			}
-			else if(index[0] <= shapesIn[i].length && index[1] >= shapesIn[i].length){	//if Index 1 is larger than the new number, but index 0 is less than the new number, place the new number in index 1;
-				index[1] = i;
-			}
-			else if(index[0] > index[1] && shapesIn[i].length >= index[0] && shapesIn[i].length >= index[1]){
-				index[1] = i;
-			}
-			else if(index[1] > index[0] && shapesIn[i].length >= index[0] && shapesIn[i].length >= index[1]){
-				index[0] = i;
-			}
-			else{
-			}
-		}
-		return index;
 	}
 }
