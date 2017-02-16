@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.math.*;
 
 public class Robot extends SampleRobot implements Constants{
 	RobotDrive driveSystem;
@@ -48,7 +49,10 @@ public class Robot extends SampleRobot implements Constants{
 				Timer.delay(5);
 			}
 			//driveSystem.tankDrive(speedStepL.SpeedStepper(gamepadr.getY()), speedStepR.SpeedStepper(gamepad.getTwist()));
-			driveSystem.tankDrive(gamepad.getY()*0.9, gamepad.getRawAxis(3)*0.9);
+			//the deadband function receives the inputs gamepad axis and deadband constant
+			//it takes these and makes sure no input is given when under the deadband constant.
+			driveSystem.tankDrive(deadBand(gamepad.getY(),driveDb)*maxSpeed, deadBand(gamepad.getRawAxis(3),driveDb)*maxSpeed);
+			Timer.delay(0.03);
 		}
 	}
 	
@@ -60,15 +64,23 @@ public class Robot extends SampleRobot implements Constants{
 
 	public void auto0(){
 		while(isEnabled()){
-			if(ultraSonic.getDistance()>30){
-		 	driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
+			if(ultraSonic.getDistance()>=30){
+		 	//driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
 			SmartDashboard.putNumber("UltraSonic Distance : ", ultraSonic.getDistance());
-			//Limit reached Driving blind for 1 seconds
+			
 		}else{
 			Timer.delay(1);
 			driveSystem.arcadeDrive(0, 0);
+			SmartDashboard.putString("text:", "Max Value Reached Driving Blinf For 1 Second");
 			}
 		}
-	}	
+	}
+	public double deadBand(double AxisInput,double deadband){
+		if(Math.abs(AxisInput)<deadband){
+			return 0;
+		}
+		return AxisInput;
+	}
+	
 }
 

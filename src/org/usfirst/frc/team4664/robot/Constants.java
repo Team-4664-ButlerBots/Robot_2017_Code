@@ -15,8 +15,7 @@ public interface Constants {
     final double latticeUp     = 0.8;
     final double latticeDown   = -.5;
 //dead band variables
-    final double driveXDb    = 0.3;
-    final double driveYDb    = 0.3;
+    final double driveDb    = 0.5;
     final double armTorqueDb = 0.2;
 //Laptop ports
     final int gamepadPort	= 1;
@@ -24,5 +23,7 @@ public interface Constants {
 //Sensor Variables
     final int rangeFinder   = 0;
     final int gyroSense   = 1;
+//Scale Factors
+    final double maxSpeed   = 0.85;
 
 }
