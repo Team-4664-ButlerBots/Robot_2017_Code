@@ -5,11 +5,13 @@ import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.math.*;
 
 public class Robot extends SampleRobot implements Constants{
 	RobotDrive driveSystem;
+	Victor topMotor;
 	Joystick stick;
 	Joystick gamepad;
 	AnalogGyro gyro;
@@ -17,6 +19,7 @@ public class Robot extends SampleRobot implements Constants{
 	public Robot() {
 		driveSystem = new RobotDrive(lsMotor, rsMotor);
 		driveSystem.setExpiration(0.1);
+		topMotor =new Victor(2);
 		stick = new Joystick(gamepadPort);
 		gamepad = new Joystick(joystickPort);
 		gyro = new AnalogGyro(gyroSense);
@@ -42,18 +45,21 @@ public class Robot extends SampleRobot implements Constants{
 	@Override
 	public void operatorControl() {
 		driveSystem.setSafetyEnabled(true);
-		while (isOperatorControl() && isEnabled()) {
+		while (isOperatorControl() && isEnabled()) 
+		{
 			if(gamepad.getRawButton(9)){
 				driveSystem.tankDrive(0.0, 0.0);
 				System.out.println("Emergency disabled for 5 seconds");
 				Timer.delay(5);
 			}
-			//driveSystem.tankDrive(speedStepL.SpeedStepper(gamepadr.getY()), speedStepR.SpeedStepper(gamepad.getTwist()));
 			//the deadband function receives the inputs gamepad axis and deadband constant
 			//it takes these and makes sure no input is given when under the deadband constant.
-			driveSystem.tankDrive(Deadband(gamepad.getY(),driveDb)*maxSpeed, Deadband(gamepad.getRawAxis(3),driveDb)*maxSpeed);
-			SmartDashboard.putNumber("deadBand: ", Deadband(gamepad.getY(),driveDb));
-			SmartDashboard.putNumber("raw value ", gamepad.getY());
+			driveSystem.tankDrive(deadBand(gamepad.getRawAxis(3),driveDb)*maxSpeed,deadBand(gamepad.getY(),driveDb)*maxSpeed );
+			
+			
+			
+			topMotor.set(deadBand(stick.getY(),armDb));
+			Dashboard();
 			Timer.delay(0.03);
 		}
 	}
@@ -65,28 +71,47 @@ public class Robot extends SampleRobot implements Constants{
 
 
 	public void auto0(){
+		//Not working.
 		while(isEnabled()){
+			Dashboard();
 			if(ultraSonic.getDistance()>=30){
-		 	//driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
-			SmartDashboard.putNumber("UltraSonic Distance : ", ultraSonic.getDistance());
-			SmartDashboard.putNumber("UltraSonic Voltage : ", ultraSonic.getVolt());
 			
 		}else{
 			Timer.delay(1);
 			driveSystem.arcadeDrive(0, 0);
-			SmartDashboard.putString("text:", "Max Value Reached Driving Blinf For 1 Second");
+			SmartDashboard.putString("text:", "Max Value Reached Driving Blind For 1 Second");
 			}
 		}
 	}
-	Double Deadband(double AxisInput,double deadband){
-		if(Math.abs(AxisInput)<=deadband){
-			return 0.0;
-		}else if(AxisInput>deadband){
-			return (AxisInput - deadband) / (1.0 - deadband);
-		}else{
-			return (AxisInput + deadband) / (1.0 - deadband);
-		}
+	
+	public void Dashboard(){
+		//ultrasonic Display
+		SmartDashboard.putNumber("UltraSonic Distance Cm : ", ultraSonic.getDistance());
+		SmartDashboard.putNumber("UltraSonic Voltage : ", ultraSonic.getVolt());
+		SmartDashboard.putNumber("UltraSonic distance feet", ultraSonic.getDistance()/30.48);
+		//Deadband Display
+		SmartDashboard.putNumber("deadBand Left : ", deadBand(gamepad.getY(),driveDb));
+		SmartDashboard.putNumber("raw value Left ", gamepad.getY());
+		SmartDashboard.putNumber("deadBand Left : ", deadBand(gamepad.getRawAxis(3),driveDb));
+		SmartDashboard.putNumber("raw value Left ", gamepad.getRawAxis(3));
 		
+	}
+	
+	double deadBand(double AxisInput,double deadband){
+		AxisInput=Limit(AxisInput);
+		if(Math.abs(AxisInput)<=deadband)
+			return 0.0;
+		if(AxisInput>deadband)
+			return (AxisInput - deadband) / (1.0 - deadband);
+		// else
+			return (AxisInput + deadband) / (1.0 - deadband);
+		
+	}
+	
+	double Limit(double value) {
+		if(value > 1.0)  return 1.0;
+		if(value < -1.0) return -1.0;
+						 return value;
 	}
 	
 }
