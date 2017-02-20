@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.math.*;
 
 public class Robot extends SampleRobot implements Constants{
 	RobotDrive driveSystem;
@@ -61,26 +60,20 @@ public class Robot extends SampleRobot implements Constants{
 	boolean collectorInv = false;
 	@Override
 	public void operatorControl() {
-		driveSystem.setSafetyEnabled(true);
-		hopperMotor.set(1.0);
+		driveSystem.setSafetyEnabled(false);
+		hopperMotor.set(-1.0);
 		while (isOperatorControl() && isEnabled()) 
 		{
-			if(gamepad.getRawButton(9)){
-				driveSystem.tankDrive(0.0, 0.0); 
-				hopperMotor.set(0);
-				collectMotor.set(0);
-				shootMotor.set(0);
 
-				Timer.delay(90000);
-				
-			}
+		
 			//the deadband function receives the inputs gamepad axis and deadband constant
 			//it takes these and makes sure no input is given when under the deadband constant.
-			driveSystem.tankDrive(deadBand(gamepad.getRawAxis(3),driveDb)*maxSpeed,deadBand(gamepad.getY(),driveDb)*maxSpeed );
+			driveSystem.tankDrive(deadBand(gamepad.getRawAxis(3),driveDb)*maxSpeedDrive,deadBand(gamepad.getY(),driveDb)*maxSpeedDrive );
 
 			
 			//COLECTOR CONTROL
 			if(stick.getRawButton(collectInB)){
+				
 				collectorOn=true;
 				collectorInv = false;
 			}
@@ -110,7 +103,7 @@ public class Robot extends SampleRobot implements Constants{
 			
 			
 			//Climb Motor
-			climbMotor.set(deadBand(stick.getY(),climbDb));
+			climbMotor.set(deadBand(Limit(-stick.getY(),0.0,1.0),climbDb));
 			
 			
 			Dashboard();
@@ -156,6 +149,8 @@ public class Robot extends SampleRobot implements Constants{
 		SmartDashboard.putNumber("raw value Left ", gamepad.getY());
 		SmartDashboard.putNumber("deadBand Right : ", deadBand(gamepad.getRawAxis(3),driveDb));
 		SmartDashboard.putNumber("raw value Right ", gamepad.getRawAxis(3));
+		
+
 		
 	}
 	
