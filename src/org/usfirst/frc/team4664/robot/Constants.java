@@ -4,13 +4,16 @@ public interface Constants {
 	final int lsMotor	    = 1;
     final int rsMotor	    = 0;
     
-    final int collectMPort= 2;
-    final int shootMPort= 3;
+    final int collectMPort= 5;//correct
+    final int shootMPort =  3;//correct
+    final int hopperPort =  4;
+    final int climbMPort =  2;//correct
     
 //joystick 2 buttons
-    final int collectStartB = 3;
-    final int collectStopB = 2;
-    final int shootB = 1; //(uses method GetTrigger)
+    final int collectInB = 4;
+    final int collectOutB = 5;
+    final int collectStopB = 3;
+    final int shootB = 1; // Uses method .getTrigger()
 //speed variables
     final double armSpeedVal   = 0.25;
     final double winchOut      = 1.0;
@@ -19,7 +22,7 @@ public interface Constants {
     final double latticeDown   = -.5;
 //dead band variables
     final double driveDb    = 0.2;
-    final double armDb = 0.2;
+    final double climbDb = 0.3;
 //Laptop ports
     final int gamepadPort	= 1;
     final int joystickPort  = 0;

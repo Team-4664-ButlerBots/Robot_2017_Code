@@ -19,6 +19,7 @@ public class Robot extends SampleRobot implements Constants{
 	Joystick gamepad;
 	AnalogGyro gyro;
 	Range_Finder ultraSonic;
+	
 	public Robot() {
 		//Motors
 		driveSystem = new RobotDrive(lsMotor, rsMotor);
@@ -57,10 +58,11 @@ public class Robot extends SampleRobot implements Constants{
 	
 
 	boolean collectorOn=false;
+	boolean collectorInv = false;
 	@Override
 	public void operatorControl() {
 		driveSystem.setSafetyEnabled(true);
-		hopperMotor.set(0.2);
+		hopperMotor.set(1.0);
 		while (isOperatorControl() && isEnabled()) 
 		{
 			if(gamepad.getRawButton(9)){
@@ -78,22 +80,30 @@ public class Robot extends SampleRobot implements Constants{
 
 			
 			//COLECTOR CONTROL
-			if(stick.getRawButton(3))
+			if(stick.getRawButton(collectInB)){
 				collectorOn=true;
-			
-			if(stick.getRawButton(2))
+				collectorInv = false;
+			}
+			if(stick.getRawButton(collectOutB)){
+				collectorOn= true;
+				collectorInv = true;
+			}
+			if(stick.getRawButton(collectStopB))
 				collectorOn=false;
 			
 			if(collectorOn){
-				collectMotor.set(1.0);
-			}else{
+				if(collectorInv)
+					collectMotor.set(1.0);
+				else
+					collectMotor.set(-1.0);
+			}else
 				collectMotor.set(0.0);
-			}
+			
 			
 			
 			//Shoot Control
 			if(stick.getTrigger()){
-				shootMotor.set(0.60);
+				shootMotor.set(-0.60);
 			}else{
 				shootMotor.set(0);
 			}
