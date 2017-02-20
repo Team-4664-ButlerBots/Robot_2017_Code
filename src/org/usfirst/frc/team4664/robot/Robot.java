@@ -33,9 +33,13 @@ public class Robot extends SampleRobot implements Constants{
 
 	@Override
 	public void autonomous() {
-		switch(0){
+		gyro.calibrate();
+		switch(1){
 		case 0:
 		auto0();
+			break;
+		case 1:
+		auto1();
 			break;
 			
 		}
@@ -74,26 +78,34 @@ public class Robot extends SampleRobot implements Constants{
 		//Not working.
 		while(isEnabled()){
 			Dashboard();
-			if(ultraSonic.getDistance()>=30){
-			
-		}else{
-			Timer.delay(1);
-			driveSystem.arcadeDrive(0, 0);
-			SmartDashboard.putString("text:", "Max Value Reached Driving Blind For 1 Second");
+			driveSystem.arcadeDrive(-0.55, -gyro.getAngle()*0.1);
+			Timer.delay(0.05);
+
 			}
 		}
+	
+	public void auto1(){
+		while(isEnabled()){
+			Dashboard();
+			driveSystem.arcadeDrive(-0.5, 10);
+			Timer.delay(0.05);
+
+			}
 	}
+	
 	
 	public void Dashboard(){
 		//ultrasonic Display
 		SmartDashboard.putNumber("UltraSonic Distance Cm : ", ultraSonic.getDistance());
 		SmartDashboard.putNumber("UltraSonic Voltage : ", ultraSonic.getVolt());
 		SmartDashboard.putNumber("UltraSonic distance feet", ultraSonic.getDistance()/30.48);
+		//Gyro display
+		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
 		//Deadband Display
 		SmartDashboard.putNumber("deadBand Left : ", deadBand(gamepad.getY(),driveDb));
 		SmartDashboard.putNumber("raw value Left ", gamepad.getY());
-		SmartDashboard.putNumber("deadBand Left : ", deadBand(gamepad.getRawAxis(3),driveDb));
-		SmartDashboard.putNumber("raw value Left ", gamepad.getRawAxis(3));
+		SmartDashboard.putNumber("deadBand Right : ", deadBand(gamepad.getRawAxis(3),driveDb));
+		SmartDashboard.putNumber("raw value Right ", gamepad.getRawAxis(3));
 		
 	}
 	
@@ -114,5 +126,18 @@ public class Robot extends SampleRobot implements Constants{
 						 return value;
 	}
 	
+	
+	double counter=0;
+	double firstError=0;
+	double lastError=0;
+	double currentError;
+	double dErr;
+	void LineGyro(double CurrentAngle,double TargetAngle){
+		currentError=TargetAngle-CurrentAngle;
+ 
+		
+		
+		Timer.delay(0.05);
+	}
 }
 
