@@ -3,11 +3,14 @@ package org.usfirst.frc.team4664.robot;
 public interface Constants {
 	final int lsMotor	    = 1;
     final int rsMotor	    = 0;
+    
+    final int collectMPort= 2;
+    final int shootMPort= 3;
+    
 //joystick 2 buttons
-    final int latticeUpB    = 3;
-    final int latticeDownB 	= 2;
-    final int winchOutB   	= 4;
-    int winchInB     		= 5;
+    final int collectStartB = 3;
+    final int collectStopB = 2;
+    final int shootB = 1; //(uses method GetTrigger)
 //speed variables
     final double armSpeedVal   = 0.25;
     final double winchOut      = 1.0;

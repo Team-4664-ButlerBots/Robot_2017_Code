@@ -11,17 +11,27 @@ import java.math.*;
 
 public class Robot extends SampleRobot implements Constants{
 	RobotDrive driveSystem;
-	Victor topMotor;
+	Victor collectMotor;
+	Victor shootMotor;
+	Victor hopperMotor;
+	Victor climbMotor;
 	Joystick stick;
 	Joystick gamepad;
 	AnalogGyro gyro;
 	Range_Finder ultraSonic;
 	public Robot() {
+		//Motors
 		driveSystem = new RobotDrive(lsMotor, rsMotor);
 		driveSystem.setExpiration(0.1);
-		topMotor =new Victor(2);
+		hopperMotor=new Victor(hopperPort);
+		collectMotor =new Victor(collectMPort);
+		shootMotor=new Victor(shootMPort);
+		climbMotor=new Victor(climbMPort);
+		//Input
 		stick = new Joystick(gamepadPort);
 		gamepad = new Joystick(joystickPort);
+		
+		//Sensors
 		gyro = new AnalogGyro(gyroSense);
 		gyro.calibrate();
 		ultraSonic = new Range_Finder(rangeFinder);
@@ -46,23 +56,53 @@ public class Robot extends SampleRobot implements Constants{
 	}
 	
 
+	boolean collectorOn=false;
 	@Override
 	public void operatorControl() {
 		driveSystem.setSafetyEnabled(true);
+		hopperMotor.set(0.2);
 		while (isOperatorControl() && isEnabled()) 
 		{
 			if(gamepad.getRawButton(9)){
-				driveSystem.tankDrive(0.0, 0.0);
-				System.out.println("Emergency disabled for 5 seconds");
-				Timer.delay(5);
+				driveSystem.tankDrive(0.0, 0.0); 
+				hopperMotor.set(0);
+				collectMotor.set(0);
+				shootMotor.set(0);
+
+				Timer.delay(90000);
+				
 			}
 			//the deadband function receives the inputs gamepad axis and deadband constant
 			//it takes these and makes sure no input is given when under the deadband constant.
 			driveSystem.tankDrive(deadBand(gamepad.getRawAxis(3),driveDb)*maxSpeed,deadBand(gamepad.getY(),driveDb)*maxSpeed );
+
+			
+			//COLECTOR CONTROL
+			if(stick.getRawButton(3))
+				collectorOn=true;
+			
+			if(stick.getRawButton(2))
+				collectorOn=false;
+			
+			if(collectorOn){
+				collectMotor.set(1.0);
+			}else{
+				collectMotor.set(0.0);
+			}
 			
 			
+			//Shoot Control
+			if(stick.getTrigger()){
+				shootMotor.set(0.60);
+			}else{
+				shootMotor.set(0);
+			}
 			
-			topMotor.set(deadBand(stick.getY(),armDb));
+			
+			//Climb Motor
+			climbMotor.set(deadBand(stick.getY(),climbDb));
+			
+			
 			Dashboard();
 			Timer.delay(0.03);
 		}
@@ -110,7 +150,7 @@ public class Robot extends SampleRobot implements Constants{
 	}
 	
 	double deadBand(double AxisInput,double deadband){
-		AxisInput=Limit(AxisInput);
+		AxisInput=Limit(AxisInput,-1.0,1.0);
 		if(Math.abs(AxisInput)<=deadband)
 			return 0.0;
 		if(AxisInput>deadband)
@@ -120,9 +160,9 @@ public class Robot extends SampleRobot implements Constants{
 		
 	}
 	
-	double Limit(double value) {
-		if(value > 1.0)  return 1.0;
-		if(value < -1.0) return -1.0;
+	double Limit(double value,double min,double max) {
+		if(value > max)  return max;
+		if(value < min) return min;
 						 return value;
 	}
 	
