@@ -1,8 +1,8 @@
 package org.usfirst.frc.team4664.robot;
 
 public interface Constants {
-	final int lsMotor	    = 1;
-    final int rsMotor	    = 0;
+	final int lsMotor	    = 0;
+    final int rsMotor	    = 1;
     
     final int collectMPort= 5;//correct
     final int shootMPort =  3;//correct
@@ -21,7 +21,7 @@ public interface Constants {
     final double latticeUp     = 0.8;
     final double latticeDown   = -.5;
 //dead band variables
-    final double driveDb    = 0.2;
+    final double driveDb    = -0.2;
     final double climbDb = 0.3;
 //Laptop ports
     final int gamepadPort	= 1;

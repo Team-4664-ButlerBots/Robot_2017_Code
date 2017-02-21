@@ -61,7 +61,7 @@ public class Robot extends SampleRobot implements Constants{
 	@Override
 	public void operatorControl() {
 		driveSystem.setSafetyEnabled(false);
-		hopperMotor.set(-1.0);
+		hopperMotor.set(1.0);
 		while (isOperatorControl() && isEnabled()) 
 		{
 
@@ -96,9 +96,10 @@ public class Robot extends SampleRobot implements Constants{
 			
 			//Shoot Control
 			if(stick.getTrigger()){
-				shootMotor.set(-0.60);
+				shootMotor.set(-.65);
 			}else{
 				shootMotor.set(0);
+				
 			}
 			
 			
@@ -149,6 +150,8 @@ public class Robot extends SampleRobot implements Constants{
 		SmartDashboard.putNumber("raw value Left ", gamepad.getY());
 		SmartDashboard.putNumber("deadBand Right : ", deadBand(gamepad.getRawAxis(3),driveDb));
 		SmartDashboard.putNumber("raw value Right ", gamepad.getRawAxis(3));
+		
+		SmartDashboard.putNumber("climb power", deadBand(Limit(-stick.getY(),0.0,1.0),climbDb));
 		
 
 		
