@@ -55,13 +55,14 @@ public class Robot extends SampleRobot implements Constants{
 		}
 	}
 	
-
+    boolean hopper=false;
 	boolean collectorOn=false;
 	boolean collectorInv = false;
+	
+	
 	@Override
 	public void operatorControl() {
-		driveSystem.setSafetyEnabled(false);
-		hopperMotor.set(1.0);
+		driveSystem.setSafetyEnabled(true);
 		while (isOperatorControl() && isEnabled()) 
 		{
 
@@ -70,17 +71,35 @@ public class Robot extends SampleRobot implements Constants{
 			//it takes these and makes sure no input is given when under the deadband constant.
 			driveSystem.tankDrive(deadBand(gamepad.getRawAxis(3),driveDb)*maxSpeedDrive,deadBand(gamepad.getY(),driveDb)*maxSpeedDrive );
 
+		//Agitator Motor Control
 			
-			//COLECTOR CONTROL
+			//Toggles Agitator On
+			if(stick.getRawButton(hopperB))
+                hopper = true;
+			
+            if(stick.getRawButton(10))
+            	hopper = false;
+            
+			//Toggles Hopper Motor On
+			if(hopper)
+				hopperMotor.set(1.0);
+			else
+				hopperMotor.set(0.0);
+			
+			
+		//COLLECTOR CONTROL
+			
+			//Toggles Collector In
 			if(stick.getRawButton(collectInB)){
-				
 				collectorOn=true;
 				collectorInv = false;
 			}
+			//Toggles Collector out
 			if(stick.getRawButton(collectOutB)){
 				collectorOn= true;
 				collectorInv = true;
 			}
+			//Toggles Collector off	
 			if(stick.getRawButton(collectStopB))
 				collectorOn=false;
 			
@@ -95,12 +114,11 @@ public class Robot extends SampleRobot implements Constants{
 			
 			
 			//Shoot Control
-			if(stick.getTrigger()){
-				shootMotor.set(-.65);
-			}else{
+			if(stick.getTrigger())
+				shootMotor.set(-.60);
+			else
 				shootMotor.set(0);
 				
-			}
 			
 			
 			//Climb Motor
@@ -108,11 +126,11 @@ public class Robot extends SampleRobot implements Constants{
 			
 			
 			Dashboard();
-			Timer.delay(0.03);
+			Timer.delay(0.05);
+			
 		}
-	}
+    }
 	
-
 	@Override
 	public void test() {
 	}

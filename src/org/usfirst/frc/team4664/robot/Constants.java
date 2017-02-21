@@ -10,6 +10,7 @@ public interface Constants {
     final int climbMPort =  2;//correct
     
 //joystick 2 buttons
+    final int hopperB = 11;
     final int collectInB = 4;
     final int collectOutB = 5;
     final int collectStopB = 3;
@@ -30,6 +31,6 @@ public interface Constants {
     final int rangeFinder   = 0;
     final int gyroSense   = 1;
 //Scale Factors
-    final double maxSpeedDrive   = -0.75;//negative to flip direction
+    final double maxSpeedDrive   = 0.75;//negative to flip direction
 
 }
