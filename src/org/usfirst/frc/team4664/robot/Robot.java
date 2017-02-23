@@ -58,16 +58,15 @@ public class Robot extends SampleRobot implements Constants{
 	public void auto0(){
 		while(isEnabled()){
 			//if(ultraSonic.getDistance()>30){
-			if(true){
+			boolean wew = true;
+			if(wew){
 			driveSystem.arcadeDrive(0.5, gyro.getAngle()/18);
 			//Limit reached Driving blind for 1 seconds
 			
-		}else{
-			Timer.delay(1);
-			driveSystem.arcadeDrive(0, 0);
+			}else {
+				Timer.delay(1);
+				driveSystem.arcadeDrive(0, 0);
 			}
 		}
 	}
 }
-
-
