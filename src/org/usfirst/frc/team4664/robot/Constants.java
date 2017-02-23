@@ -8,8 +8,14 @@ public interface Constants {
 	////MOTOR PORTS
 	final int lsMotor	    = 0;//These numbers should probably never have to be changed
     final int rsMotor	    = 1;
+    final int collectMPort  = 5;//correct
+    final int shootMPort    =  3;//correct
+    final int hopperPort    =  4;//correct
+    final int climbMPort    =  2;//correct
     
-    
+    ////SENSOR VARIABLES
+    final int rangeFinder   = 0;
+    final int gyroSense   = 1;
     /*
     // SPEED CONTROLS
     */
@@ -30,19 +36,21 @@ public interface Constants {
     final int exampleButton2 = 1;
     
     ////joystick 2 buttons
-    final int latticeUpB    = 3;//These could be changed for the joystick buttons
-    final int latticeDownB 	= 2;
-    final int winchOutB   	= 4;
-    int winchInB     		= 5;
+    final int hopperB = 11;
+    final int collectInB = 4;
+    final int collectOutB = 5;
+    final int collectStopB = 3;
+    final int shootB = 1; // Uses method .getTrigger()
     
     
     /*
-    //DEAD BAND VALUES
+    //ASSORTED VALUES
     */
     
-    final double driveXDb    = 0.3;//  dead band variables to only adjust when there's serious problems
-    final double driveYDb    = 0.3;// with false outputs on the controller
+    final double driveDb    = -0.2;//  dead band variables to only adjust when there's serious problems
+    final double climbDb = 0.3;// with false outputs on the controller
     final double armTorqueDb = 0.2;// values from 0.00 to 1.00 again
+    final double maxSpeedDrive   = 0.75;//negative to flip direction
 
     
     /*
@@ -51,5 +59,4 @@ public interface Constants {
    
     final int gamepadPort	= 1;//  ports for USB controllers on the laptop, should never need to be adjusted
     final int joystickPort  = 0;
-
 }
