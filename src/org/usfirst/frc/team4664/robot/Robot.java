@@ -44,7 +44,7 @@ public class Robot extends SampleRobot implements Constants{
 	@Override
 	public void autonomous() {
 		gyro.calibrate();
-		switch(1){
+		switch(0){
 		case 0:
 		auto0();
 			break;

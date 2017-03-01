@@ -31,6 +31,6 @@ public interface Constants {
     final int rangeFinder   = 0;
     final int gyroSense   = 1;
 //Scale Factors
-    final double maxSpeedDrive   = 0.75;//negative to flip direction
+    final double maxSpeedDrive   = 1.0;//negative to flip direction
 
 }
