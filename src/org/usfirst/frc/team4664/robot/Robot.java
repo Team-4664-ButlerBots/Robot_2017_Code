@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Encoder;
 
 public class Robot extends SampleRobot implements Constants{
 	RobotDrive driveSystem;
@@ -18,6 +20,7 @@ public class Robot extends SampleRobot implements Constants{
 	Joystick gamepad;
 	AnalogGyro gyro;
 	Range_Finder ultraSonic;
+	Encoder encode;
 	
 	public Robot() {
 		//Motors
@@ -35,6 +38,26 @@ public class Robot extends SampleRobot implements Constants{
 		gyro = new AnalogGyro(gyroSense);
 		gyro.calibrate();
 		ultraSonic = new Range_Finder(rangeFinder);
+		
+		//Encoder
+		encode = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+		encode.setMaxPeriod(.1);
+		encode.setMinRate(10);
+		encode.setDistancePerPulse(5);
+		encode.setReverseDirection(true);
+		encode.setSamplesToAverage(7);
+		
+		Encoder encoder = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+		int count = encoder.get();
+		double distance = encoder.getRaw();
+		double distance = encoder.getDistance();
+		double period = encoder.getPeriod();
+		double rate = encoder.getRate();
+		boolean direction = encoder.getDirection();
+		boolean stopped = encoder.getStopped();
+		
+		//Camera
+		CameraServer.getInstance().startAutomaticCapture();
 	}
 
 	@Override
@@ -43,13 +66,15 @@ public class Robot extends SampleRobot implements Constants{
 
 	@Override
 	public void autonomous() {
+		//use auto 1;
 		gyro.calibrate();
-		switch(0){
+		switch(1){
 		case 0:
 		auto0();
 			break;
 		case 1:
 		auto1();
+		
 			break;
 			
 		}
@@ -149,6 +174,7 @@ public class Robot extends SampleRobot implements Constants{
 	public void auto1(){
 		while(isEnabled()){
 			Dashboard();
+			
 			driveSystem.arcadeDrive(-0.5, 10);
 			Timer.delay(0.05);
 

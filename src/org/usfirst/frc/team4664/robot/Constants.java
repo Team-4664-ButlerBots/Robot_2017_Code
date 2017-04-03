@@ -1,8 +1,8 @@
 package org.usfirst.frc.team4664.robot;
 
 public interface Constants {
-	final int lsMotor	    = 0;
-    final int rsMotor	    = 1;
+	final int lsMotor	    = 1;
+    final int rsMotor	    = 0;
     
     final int collectMPort= 5;//correct
     final int shootMPort =  3;//correct
@@ -31,6 +31,6 @@ public interface Constants {
     final int rangeFinder   = 0;
     final int gyroSense   = 1;
 //Scale Factors
-    final double maxSpeedDrive   = 1.0;//negative to flip direction
+    final double maxSpeedDrive   = 0.8;//negative to flip direction
 
 }
