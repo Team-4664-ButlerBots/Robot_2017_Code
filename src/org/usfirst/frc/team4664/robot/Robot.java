@@ -21,7 +21,7 @@ public class Robot extends SampleRobot implements Constants{
 	Joystick gamepad;
 	AnalogGyro gyro;
 	Range_Finder ultraSonic;
-	Accelerometer rioAccel;
+	CustomAccel rioAccel;
 
 	
 	public Robot() {
@@ -40,7 +40,7 @@ public class Robot extends SampleRobot implements Constants{
 		gyro = new AnalogGyro(gyroSense);
 		gyro.calibrate();
 		ultraSonic = new Range_Finder(rangeFinder);
-		rioAccel = new Accelerometer();
+		rioAccel = new CustomAccel();
 		
 		//Camera
 		CameraServer.getInstance().startAutomaticCapture();
@@ -76,6 +76,7 @@ public class Robot extends SampleRobot implements Constants{
 		driveSystem.setSafetyEnabled(true);
 		while (isOperatorControl() && isEnabled()) 
 		{
+			rioAccel.updateAccel();
 
 		
 			//the deadband function receives the inputs gamepad axis and deadband constant
@@ -242,12 +243,20 @@ public class Robot extends SampleRobot implements Constants{
 		
 		SmartDashboard.putNumber("climb power", deadBand(Limit(-stick.getY(),0.0,1.0),climbDb));
 		
-		SmartDashboard.putNumber("accel x", 1);
-		SmartDashboard.putNumber("accel y", 1);
-		SmartDashboard.putNumber("accel z", 1);
-
-
+		SmartDashboard.putNumber("accel x", rioAccel.getXaccel());
+		SmartDashboard.putNumber("accel y", rioAccel.getYaccel());
+		SmartDashboard.putNumber("accel z", rioAccel.getZaccel());
 		
+		SmartDashboard.putNumber("velocity x", rioAccel.getxVel());
+		SmartDashboard.putNumber("velocity Y", rioAccel.getYvel());
+		SmartDashboard.putNumber("velocity Z", rioAccel.getzVel());
+		
+		SmartDashboard.putNumber("position x", rioAccel.getXpos());
+		SmartDashboard.putNumber("position Y", rioAccel.getYpos());
+		SmartDashboard.putNumber("position Z", rioAccel.getZpos());
+
+
+
 	}
 	
 	double deadBand(double AxisInput,double deadband){
